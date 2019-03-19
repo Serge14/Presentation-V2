@@ -1,4 +1,4 @@
-No,Type,Name,Region,Formula 1,Formula 2
+No,Type,Name,Region,Formula1,Formula2
 1,Two tables,Main Baby Food Producers Performance,Ukraine,"""Value"", ""Company"", 11, ""VALUEC > 0""","""Volume"", ""Company"", 11, ""VALUEC > 0"""
 2,Table & Chart,Producers Volume Share: IMF + Dry Food + Puree,Ukraine,"""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""DRY FOOD"" | PS3 == ""SAVOURY MEAL"" | PS3 == ""FRUITS""'","""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""DRY FOOD"" | PS3 == ""SAVOURY MEAL"" | PS3 == ""FRUITS""'"
 3,Table & Chart,Brands Volume Share: IMF + Dry Food + Puree,Ukraine,,

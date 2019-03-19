@@ -2,8 +2,10 @@
 
 library(data.table)
 library(stringr)
+library(officer)
 
 setwd("/home/sergiy/Documents/Work/Nutricia/Global/Ver2")
+setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
 
 YTD.No = 1
 
@@ -12,14 +14,16 @@ YTD.No = 1
 df = fread("/home/sergiy/Documents/Work/Nutricia/1/Data/df.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
 ppt = read_pptx("sample2.pptx")
-dictColor = fread("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2/dictColor.csv")
-dictContent = fread("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2/dictContent.csv")
+dictColor = fread("dictColor.csv")
+dictContent = fread("dictContent.csv")
+dictContent = read.csv("dictContent.csv")
 
 
-df = df[Form != "Liquid", 
-        c("SubBrand", "Size", "Age", "Scent", "Pieces", "Value", "Volume", 
+df = df[, c("SubBrand", "Size", "Age", "Scent", "Pieces", "Value", "Volume", 
             "Channel", "EC", "AC", "Acidified",
             "Scent2", "ScentType", "GlobalPriceSegment") := NULL]
+
+df = df[Form != "Liquid"]
 
 df = df[, .(ITEMSC = sum(PiecesC), VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC)),
         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
@@ -141,7 +145,7 @@ makeChart = function(df){
   
 }
 
-dataTable = function(measure, level, linesToShow, filterSegments = NULL) {
+dataTable = function(data, measure, level, linesToShow, filterSegments = NULL) {
   
   # Create subset which consists only segments we'll work with
   #df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
@@ -289,8 +293,15 @@ dataSegmentChart = function(measure, level, linesToShow, filterSegments) {
   return(result)
 }
 
-dataSubset = df[]
+dataTable(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
 
+dataTable(df, eval(parse(text = cat(a))))
+
+eval(parse(text = paste("mean(x,", myoptions, ")")))
+
+dataSubset = 
+
+dictContent
 
 mytmp = layout_summary(ppt)[[2]][1]
 ppt = ppt %>%
