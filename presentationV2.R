@@ -3,19 +3,35 @@
 library(data.table)
 library(stringr)
 library(officer)
+library(flextable)
+library(ggplot2)
+library(ggpubr)
+library(magrittr)
 
-setwd("/home/sergiy/Documents/Work/Nutricia/Global/Ver2")
+# setwd("d:/Temp/3/Presentation-V2-master")
 setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
 
 YTD.No = 1
+
+CP = "JAN 19"
+vsPP = "vs. PP"
+YTD = "YTD 19"
+difYTD = "vs YTD18"
+MAT = "MAT 19"
+difMAT = "vs MAT18"
+
+tableColnames3 = c("MAT 18", "MAT 19", ".", "YTD 18", "YTD 19", ".",
+                   "JAN 18", "FEB 18", "MAR 18", "APR 18", "MAY 18", "JUN 18", "JUL 18",
+                   "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19")
 
 # Read all necessary files
 
 df = fread("/home/sergiy/Documents/Work/Nutricia/1/Data/df.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
 ppt = read_pptx("sample2.pptx")
-dictColor = fread("dictColor.csv")
-dictContent = fread("dictContent.csv")
+dictColors = fread("dictColor.csv")
+dictColors = dictColors[Color != ""]
+# dictContent = fread("dictContent.csv")
 dictContent = read.csv("dictContent.csv")
 
 
@@ -53,7 +69,7 @@ makeTable = function(df) {
   ft <- color(ft, ~ difYTD < 0, ~ difYTD, color = "red")
   ft <- color(ft, ~ difMAT < 0, ~ difMAT, color = "red")
   
-  ft <- bold(ft, ~ Name == "MILUPA", bold = TRUE)
+  # ft <- bold(ft, ~ Name == "MILUPA", bold = TRUE)
   
   ft = colformat_num(ft, cols2, digits = 1)
   
@@ -65,20 +81,20 @@ makeTable = function(df) {
   ft = width(ft, j = ~ col_3, width = .05)
   
   ft = width(ft, j = ~ Name, width = 1.65)
-  ft = width(ft, j = ~ CP, width = .72)
+  ft = width(ft, j = ~ CP, width = .70)
   ft = width(ft, j = ~ vsPP, width = .72)
-  ft = width(ft, j = ~ YTD, width = .72)
+  ft = width(ft, j = ~ YTD, width = .70)
   ft = width(ft, j = ~ difYTD, width = .72)
-  ft = width(ft, j = ~ MAT, width = .72)
+  ft = width(ft, j = ~ MAT, width = .70)
   ft = width(ft, j = ~ difMAT, width = .72)
   
   ft = set_header_labels(ft, Name = cols[1], 
-                         CP = cols[3], 
-                         vsPP = cols[4],
-                         YTD = cols[6],
-                         difYTD = cols[7],
-                         MAT = cols[9],
-                         difMAT = cols[10])
+                         CP = CP, 
+                         vsPP = vsPP,
+                         YTD = YTD,
+                         difYTD = difYTD,
+                         MAT = MAT,
+                         difMAT = difMAT)
   ft = empty_blanks(ft)
   
   
@@ -88,6 +104,9 @@ makeTable = function(df) {
 }
 
 makeChart = function(df){
+  
+  # names(df)[-1] = tableColnames3
+  
   df1 = melt.data.table(df, id.vars = "Company")
   
   maxY = round(max(df1$value, na.rm = TRUE), -1)
@@ -118,7 +137,7 @@ makeChart = function(df){
           panel.grid.major.x = element_blank(),
           panel.background = element_blank(),
           axis.text.x = element_text(angle = 90, hjust = 1)) +
-    guides(color = guide_legend(nrow = 1)) + 
+    guides(color = guide_legend(nrow = 2)) + 
     coord_cartesian(ylim = c(0, maxY))
   
   df.table = ggplot(df1[Company %in% toShow], aes(x=variable, 
@@ -185,7 +204,7 @@ dataTable = function(data, measure, level, linesToShow, filterSegments = NULL) {
   return(result)
 }
 
-dataChart = function(measure, level, linesToShow, filterSegments) {
+dataChart = function(data, measure, level, linesToShow, filterSegments) {
   
   # Create subset which consists only segments we'll work with
   #df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
@@ -293,20 +312,33 @@ dataSegmentChart = function(measure, level, linesToShow, filterSegments) {
   return(result)
 }
 
+
+getTable = function(dfName, fopt) {
+  
+  if(is.null(fopt)) return(alist())
+  eval(parse(text = paste("dataTable(", dfName, ",", fopt, ")")))
+  
+}
+
+getChart = function(dfName, fopt) {
+  
+  if(is.null(fopt)) return(alist())
+  eval(parse(text = paste("dataChart(", dfName, ",", fopt, ")")))
+  
+}
+
+
+
 dataTable(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
+dataChart(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
 
-dataTable(df, eval(parse(text = cat(a))))
+fopt = dictContent$Formula1[2]
+dfName = deparse(substitute(df))
 
-eval(parse(text = paste("mean(x,", myoptions, ")")))
-
-dataSubset = 
-
-dictContent
-
-mytmp = layout_summary(ppt)[[2]][1]
+# mytmp = layout_summary(ppt)[[2]][1]
 ppt = ppt %>%
-  add_slide(layout = "Two Content", master = mytmp) %>%
-  ph_with_gg(value=df.plot, index = 2) %>% 
-  ph_with_flextable(type="body", value=t1, index=1)
+  add_slide(layout = "Two Content", master = "Office Theme") %>%
+  ph_with_gg(value = makeChart(getChart(dfName, fopt)), index = 2) %>% 
+  ph_with_flextable(type="body", value=makeTable(getTable(dfName, fopt)), index=1)
 
 print(ppt, target="sample2.pptx")
