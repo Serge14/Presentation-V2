@@ -1,11 +1,11 @@
 No,Type,Name,Region,Formula1,Formula2
 1,Two tables,Main Baby Food Producers Performance,Ukraine,"""Value"", ""Company"", 11, ""VALUEC > 0""","""Volume"", ""Company"", 11, ""VALUEC > 0"""
-2,Table & Chart,Producers Volume Share: IMF + Dry Food + Puree,Ukraine,"""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""DRY FOOD"" | PS3 == ""SAVOURY MEAL"" | PS3 == ""FRUITS""'","""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""DRY FOOD"" | PS3 == ""SAVOURY MEAL"" | PS3 == ""FRUITS""'"
+2,Table & Chart,Producers Volume Share: IMF + Dry Food + Puree,Ukraine,"""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""Dry Food"" | PS3 == ""Savoury Meal"" | PS3 == ""Fruits""'","""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""Dry Food"" | PS3 == ""Savoury Meal"" | PS3 == ""Fruits""'"
 3,Table & Chart,Brands Volume Share: IMF + Dry Food + Puree,Ukraine,,
-4,Table & Chart,Producers Volume Share: IMF + Dry Food,Ukraine,"""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""DRY FOOD""'","""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""DRY FOOD""'"
+4,Table & Chart,Producers Volume Share: IMF + Dry Food,Ukraine,"""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""Dry Food""'","""Volume"", ""Company"", 11, 'PS0 == ""IMF"" | PS2 == ""Dry Food""'"
 5,Table & Chart,Brands Volume Share: IMF + Dry Food,Ukraine,,
 6,Table & Chart,Brands Value Share: IMF + Dry Food,Ukraine,,
-7,Two charts 1,Specials / Plus / Base IF / Base FO / Base GUM segments,Ukraine,,
+7,Two charts 1,Specials / Plus / Base IF / Base FO / Base Gum segments,Ukraine,,
 8,Two charts 2,Price Segments: IMF,Ukraine,,
 9,Price Segment,Price segments in absolute volume IMF,Ukraine,,
 10,Table & Chart,Producers Volume Share: IMF,Ukraine,"""Volume"", ""Company"", 11, 'PS0 == ""IMF""'","""Volume"", ""Company"", 11, 'PS0 == ""IMF""'"
@@ -18,8 +18,8 @@ No,Type,Name,Region,Formula1,Formula2
 17,Table & Chart,Brands Value Share: Mainstream IMF,Ukraine,,
 18,Two charts 2,Price Segments: Base IF,Ukraine,,
 19,Price Segment,Price segments in absolute volume: Base IF,Ukraine,,
-20,Table & Chart,Producers Volume Share: Base IF,Ukraine,"""Volume"", ""Company"", 10, 'PS2 == ""IF"" & PS3 == ""BASE""'","""Volume"", ""Company"", 10, 'PS2 == ""IF"" & PS3 == ""BASE""'"
-21,Table & Chart,Producers Value Share: Base IF,Ukraine,"""Value"", ""Company"", 10, 'PS2 == ""IF"" & PS3 == ""BASE""'","""Value"", ""Company"", 10, 'PS2 == ""IF"" & PS3 == ""BASE""'"
+20,Table & Chart,Producers Volume Share: Base IF,Ukraine,"""Volume"", ""Company"", 10, 'PS2 == ""IF"" & PS3 == ""Base""'","""Volume"", ""Company"", 10, 'PS2 == ""IF"" & PS3 == ""Base""'"
+21,Table & Chart,Producers Value Share: Base IF,Ukraine,"""Value"", ""Company"", 10, 'PS2 == ""IF"" & PS3 == ""Base""'","""Value"", ""Company"", 10, 'PS2 == ""IF"" & PS3 == ""Base""'"
 22,Table & Chart,Brands Volume Share: Base IF,Ukraine,,
 23,Table & Chart,Brands Value Share: Base IF,Ukraine,,
 24,Table & Chart,Brands Volume Share: Premium Base IF,Ukraine,,
@@ -28,24 +28,24 @@ No,Type,Name,Region,Formula1,Formula2
 27,Table & Chart,Brands Value Share: Mainstream Base IF,Ukraine,,
 28,Two charts 1,Price Segments: Base FO,Ukraine,,
 29,Price Segment,Price segments in absolute volume: Base FO,Ukraine,,
-30,Table & Chart,Producers Volume Share: Base FO,Ukraine,"""Volume"", ""Company"", 10, 'PS2 == ""FO"" & PS3 == ""BASE""'","""Volume"", ""Company"", 10, 'PS2 == ""FO"" & PS3 == ""BASE""'"
-31,Table & Chart,Producers Value Share: Base FO,Ukraine,"""Value"", ""Company"", 10, 'PS2 == ""FO"" & PS3 == ""BASE""'","""Value"", ""Company"", 10, 'PS2 == ""FO"" & PS3 == ""BASE""'"
+30,Table & Chart,Producers Volume Share: Base FO,Ukraine,"""Volume"", ""Company"", 10, 'PS2 == ""FO"" & PS3 == ""Base""'","""Volume"", ""Company"", 10, 'PS2 == ""FO"" & PS3 == ""Base""'"
+31,Table & Chart,Producers Value Share: Base FO,Ukraine,"""Value"", ""Company"", 10, 'PS2 == ""FO"" & PS3 == ""Base""'","""Value"", ""Company"", 10, 'PS2 == ""FO"" & PS3 == ""Base""'"
 32,Table & Chart,Brands Volume Share: Base FO,Ukraine,,
 33,Table & Chart,Brands Value Share: Base FO,Ukraine,,
 34,Table & Chart,Brands Volume Share: Premium Base FO,Ukraine,,
 35,Table & Chart,Brands Value Share: Premium Base FO,Ukraine,,
 36,Table & Chart,Brands Volume Share: Mainstream Base FO,Ukraine,,
 37,Table & Chart,Brands Value Share: Mainstream Base FO,Ukraine,,
-38,Two charts 1,Price Segments: Base GUM,Ukraine,,
-39,Price Segment,Price segments in absolute volume: Base GUM,Ukraine,,
-40,Table & Chart,Producers Volume Share: Base GUM,Ukraine,"""Volume"", ""Company"", 10, 'PS2 == ""GUM"" & PS3 == ""BASE""'","""Volume"", ""Company"", 10, 'PS2 == ""GUM"" & PS3 == ""BASE""'"
-41,Table & Chart,Producers Value Share: Base GUM,Ukraine,"""Value"", ""Company"", 10, 'PS2 == ""GUM"" & PS3 == ""BASE""'","""Value"", ""Company"", 10, 'PS2 == ""GUM"" & PS3 == ""BASE""'"
-42,Table & Chart,Brands Volume Share: Base GUM,Ukraine,,
-43,Table & Chart,Brands Value Share: Base GUM,Ukraine,,
-44,Table & Chart,Brands Volume Share: Premium Base GUM,Ukraine,,
-45,Table & Chart,Brands Value Share: Premium Base GUM,Ukraine,,
-46,Table & Chart,Brands Volume Share: Mainstream Base GUM,Ukraine,,
-47,Table & Chart,Brands Value Share: Mainstream Base GUM,Ukraine,,
+38,Two charts 1,Price Segments: Base Gum,Ukraine,,
+39,Price Segment,Price segments in absolute volume: Base Gum,Ukraine,,
+40,Table & Chart,Producers Volume Share: Base Gum,Ukraine,"""Volume"", ""Company"", 10, 'PS2 == ""Gum"" & PS3 == ""Base""'","""Volume"", ""Company"", 10, 'PS2 == ""Gum"" & PS3 == ""Base""'"
+41,Table & Chart,Producers Value Share: Base Gum,Ukraine,"""Value"", ""Company"", 10, 'PS2 == ""Gum"" & PS3 == ""Base""'","""Value"", ""Company"", 10, 'PS2 == ""Gum"" & PS3 == ""Base""'"
+42,Table & Chart,Brands Volume Share: Base Gum,Ukraine,,
+43,Table & Chart,Brands Value Share: Base Gum,Ukraine,,
+44,Table & Chart,Brands Volume Share: Premium Base Gum,Ukraine,,
+45,Table & Chart,Brands Value Share: Premium Base Gum,Ukraine,,
+46,Table & Chart,Brands Volume Share: Mainstream Base Gum,Ukraine,,
+47,Table & Chart,Brands Value Share: Mainstream Base Gum,Ukraine,,
 48,Table & Chart,Brands Volume Share: Specials,Ukraine,,
 49,Table & Chart,Brands Value Share: Specials,Ukraine,,
 50,Table & Chart,Brands Volume Share: Allergy Treatment,Ukraine,,
@@ -61,8 +61,8 @@ No,Type,Name,Region,Formula1,Formula2
 60,Table & Chart,Brands Volume Share: Preterm,Ukraine,,
 61,Table & Chart,Brands Value Share: Preterm,Ukraine,,
 62,Price Segment,Price Segments: Dry Food,Ukraine,,
-63,Table & Chart,Producers Volume Share: Dry Food,Ukraine,"""Volume"", ""Company"", 10, 'PS2 == ""DRY FOOD""'","""Volume"", ""Company"", 10, 'PS2 == ""DRY FOOD""'"
-64,Table & Chart,Producers Value Share: Dry Food,Ukraine,"""Value"", ""Company"", 10, 'PS2 == ""DRY FOOD""'","""Value"", ""Company"", 10, 'PS2 == ""DRY FOOD""'"
+63,Table & Chart,Producers Volume Share: Dry Food,Ukraine,"""Volume"", ""Company"", 10, 'PS2 == ""Dry Food""'","""Volume"", ""Company"", 10, 'PS2 == ""Dry Food""'"
+64,Table & Chart,Producers Value Share: Dry Food,Ukraine,"""Value"", ""Company"", 10, 'PS2 == ""Dry Food""'","""Value"", ""Company"", 10, 'PS2 == ""Dry Food""'"
 65,Table & Chart,Brands Volume Share: Dry Food,Ukraine,,
 66,Table & Chart,Brands Value Share: Dry Food,Ukraine,,
 67,Table & Chart,Brands Volume Share: Premium Dry Food,Ukraine,,
@@ -71,8 +71,8 @@ No,Type,Name,Region,Formula1,Formula2
 70,Two charts 1,Price Segments: Instant Cereals,Ukraine,,
 71,Price Segment,Price segments in absolute volume: Instant Cereals,Ukraine,,
 72,Two charts 3,Milk / Plain Instant Cereals,Ukraine,,
-73,Table & Chart,Producers Volume Share: Instant Cereals,Ukraine,"""Volume"", ""Company"", 10, 'PS3 == ""INSTANT CEREALS""'","""Volume"", ""Company"", 10, 'PS3 == ""INSTANT CEREALS""'"
-74,Table & Chart,Producers Value Share: Instant Cereals,Ukraine,"""Value"", ""Company"", 10, 'PS3 == ""INSTANT CEREALS""'","""Value"", ""Company"", 10, 'PS3 == ""INSTANT CEREALS""'"
+73,Table & Chart,Producers Volume Share: Instant Cereals,Ukraine,"""Volume"", ""Company"", 10, 'PS3 == ""Instant Cereals""'","""Volume"", ""Company"", 10, 'PS3 == ""Instant Cereals""'"
+74,Table & Chart,Producers Value Share: Instant Cereals,Ukraine,"""Value"", ""Company"", 10, 'PS3 == ""Instant Cereals""'","""Value"", ""Company"", 10, 'PS3 == ""Instant Cereals""'"
 75,Table & Chart,Brands Volume Share: Instant Cereals,Ukraine,,
 76,Table & Chart,Brands Value Share: Instant Cereals,Ukraine,,
 77,Table & Chart,Brands Volume Share: Premium Instant Cereals,Ukraine,,
@@ -80,12 +80,12 @@ No,Type,Name,Region,Formula1,Formula2
 79,Table & Chart,Brands Volume Share: Mainstream Instant Cereals,Ukraine,,
 80,Table & Chart,Brands Value Share: Mainstream Instant Cereals,Ukraine,,
 81,Price Segment,Price Segments: Cereal Biscuits,Ukraine,,
-82,Table & Chart,Producers Volume Share: Cereal Biscuits,Ukraine,"""Volume"", ""Company"", 10, 'PS3 == ""CEREAL BISCUITS""'","""Volume"", ""Company"", 10, 'PS3 == ""CEREAL BISCUITS""'"
-83,Table & Chart,Producers Value Share: Cereal Biscuits,Ukraine,"""Value"", ""Company"", 10, 'PS3 == ""CEREAL BISCUITS""'","""Value"", ""Company"", 10, 'PS3 == ""CEREAL BISCUITS""'"
+82,Table & Chart,Producers Volume Share: Cereal Biscuits,Ukraine,"""Volume"", ""Company"", 10, 'PS3 == ""Cereal Biscuits""'","""Volume"", ""Company"", 10, 'PS3 == ""Cereal Biscuits""'"
+83,Table & Chart,Producers Value Share: Cereal Biscuits,Ukraine,"""Value"", ""Company"", 10, 'PS3 == ""Cereal Biscuits""'","""Value"", ""Company"", 10, 'PS3 == ""Cereal Biscuits""'"
 84,Table & Chart,Brands Volume Share: Cereal Biscuits,Ukraine,,
 85,Table & Chart,Brands Value Share: Cereal Biscuits,Ukraine,,
-86,Table & Chart,Producers Volume Share: Puree,Ukraine,"""Volume"", ""Company"", 10, 'PS3 == ""FRUITS"" | PS3 == ""SAVOURY MEAL""'","""Volume"", ""Company"", 10, 'PS3 == ""FRUITS"" | PS3 == ""SAVOURY MEAL""'"
-87,Table & Chart,Producers Value Share: Puree,Ukraine,"""Value"", ""Company"", 10, 'PS3 == ""FRUITS"" | PS3 == ""SAVOURY MEAL""'","""Value"", ""Company"", 10, 'PS3 == ""FRUITS"" | PS3 == ""SAVOURY MEAL""'"
+86,Table & Chart,Producers Volume Share: Puree,Ukraine,"""Volume"", ""Company"", 10, 'PS3 == ""Fruits"" | PS3 == ""Savoury Meal""'","""Volume"", ""Company"", 10, 'PS3 == ""Fruits"" | PS3 == ""Savoury Meal""'"
+87,Table & Chart,Producers Value Share: Puree,Ukraine,"""Value"", ""Company"", 10, 'PS3 == ""Fruits"" | PS3 == ""Savoury Meal""'","""Value"", ""Company"", 10, 'PS3 == ""Fruits"" | PS3 == ""Savoury Meal""'"
 88,Table & Chart,Brands Volume Share: Puree,Ukraine,,
 89,Table & Chart,Brands Value Share: Puree,Ukraine,,
 90,Table & Chart,Brands Volume Share: IMF + Dry Food + Puree,Center,,
@@ -99,8 +99,8 @@ No,Type,Name,Region,Formula1,Formula2
 98,Table & Chart,Brands Value Share: Base IF,Center,,
 99,Table & Chart,Brands Volume Share: Base FO,Center,,
 100,Table & Chart,Brands Value Share: Base FO,Center,,
-101,Table & Chart,Brands Volume Share: Base GUM,Center,,
-102,Table & Chart,Brands Value Share: Base GUM,Center,,
+101,Table & Chart,Brands Volume Share: Base Gum,Center,,
+102,Table & Chart,Brands Value Share: Base Gum,Center,,
 103,Table & Chart,Brands Volume Share: Specials,Center,,
 104,Table & Chart,Brands Value Share: Specials,Center,,
 105,Table & Chart,Brands Volume Share: Dry Food,Center,,
@@ -122,8 +122,8 @@ No,Type,Name,Region,Formula1,Formula2
 121,Table & Chart,Brands Value Share: Base IF,East,,
 122,Table & Chart,Brands Volume Share: Base FO,East,,
 123,Table & Chart,Brands Value Share: Base FO,East,,
-124,Table & Chart,Brands Volume Share: Base GUM,East,,
-125,Table & Chart,Brands Value Share: Base GUM,East,,
+124,Table & Chart,Brands Volume Share: Base Gum,East,,
+125,Table & Chart,Brands Value Share: Base Gum,East,,
 126,Table & Chart,Brands Volume Share: Specials,East,,
 127,Table & Chart,Brands Value Share: Specials,East,,
 128,Table & Chart,Brands Volume Share: Dry Food,East,,
@@ -145,8 +145,8 @@ No,Type,Name,Region,Formula1,Formula2
 144,Table & Chart,Brands Value Share: Base IF,South,,
 145,Table & Chart,Brands Volume Share: Base FO,South,,
 146,Table & Chart,Brands Value Share: Base FO,South,,
-147,Table & Chart,Brands Volume Share: Base GUM,South,,
-148,Table & Chart,Brands Value Share: Base GUM,South,,
+147,Table & Chart,Brands Volume Share: Base Gum,South,,
+148,Table & Chart,Brands Value Share: Base Gum,South,,
 149,Table & Chart,Brands Volume Share: Specials,South,,
 150,Table & Chart,Brands Value Share: Specials,South,,
 151,Table & Chart,Brands Volume Share: Dry Food,South,,
@@ -168,8 +168,8 @@ No,Type,Name,Region,Formula1,Formula2
 167,Table & Chart,Brands Value Share: Base IF,West,,
 168,Table & Chart,Brands Volume Share: Base FO,West,,
 169,Table & Chart,Brands Value Share: Base FO,West,,
-170,Table & Chart,Brands Volume Share: Base GUM,West,,
-171,Table & Chart,Brands Value Share: Base GUM,West,,
+170,Table & Chart,Brands Volume Share: Base Gum,West,,
+171,Table & Chart,Brands Value Share: Base Gum,West,,
 172,Table & Chart,Brands Volume Share: Specials,West,,
 173,Table & Chart,Brands Value Share: Specials,West,,
 174,Table & Chart,Brands Volume Share: Dry Food,West,,

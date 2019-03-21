@@ -5,8 +5,8 @@ library(stringr)
 library(officer)
 library(flextable)
 library(ggplot2)
-library(ggpubr)
 library(magrittr)
+library(ggpubr)
 
 # setwd("d:/Temp/3/Presentation-V2-master")
 setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
@@ -20,9 +20,10 @@ difYTD = "vs YTD18"
 MAT = "MAT 19"
 difMAT = "vs MAT18"
 
-tableColnames3 = c("MAT 18", "MAT 19", ".", "YTD 18", "YTD 19", ".",
+tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
                    "JAN 18", "FEB 18", "MAR 18", "APR 18", "MAY 18", "JUN 18", "JUL 18",
                    "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19")
+
 
 # Read all necessary files
 
@@ -45,8 +46,7 @@ df = df[, .(ITEMSC = sum(PiecesC), VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC))
         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
                Additives, Region)]
 
-# or read BFprocessed
-
+# Functions
 makeTable = function(df) {
   cols = names(df)[-1]
   df[,(cols) := round(.SD, 1), .SDcols = cols]
@@ -105,9 +105,16 @@ makeTable = function(df) {
 
 makeChart = function(df){
   
-  # names(df)[-1] = tableColnames3
+  names(df)[-1] = tableColnames3
   
-  df1 = melt.data.table(df, id.vars = "Company")
+  levelName = strsplit(gsub('\"', "", as.character(fopt), fixed = TRUE), ", ")[[1]][2]
+  
+  df1 = melt.data.table(df, id.vars = levelName)
+  # df1 = melt.data.table(df, id.vars = "Company")
+  # df1[variable == "Blank1", variable := "."]
+  # df1[variable == "Blank2", variable := ".."]
+  
+  LegendRowNumber = ceiling(length(df[, unique(get(levelName))])/7)
   
   maxY = round(max(df1$value, na.rm = TRUE), -1)
   
@@ -118,9 +125,9 @@ makeChart = function(df){
   
   
   
-  toShow = df[1:3, Company]
+  toShow = df[1:3, get(levelName)]
   
-  df.plot = ggplot(df1, aes(x=variable, y=value, col = Company, group = Company)) + 
+  df.plot = ggplot(df1, aes(x=variable, y=value, col = get(levelName), group = get(levelName))) + 
     geom_line() + 
     #geom_point() +
     # geom_text_repel(aes(label = ifelse(Company %in% toShow, round(value, 1), "")),
@@ -137,14 +144,14 @@ makeChart = function(df){
           panel.grid.major.x = element_blank(),
           panel.background = element_blank(),
           axis.text.x = element_text(angle = 90, hjust = 1)) +
-    guides(color = guide_legend(nrow = 2)) + 
+    guides(color = guide_legend(nrow = LegendRowNumber)) + 
     coord_cartesian(ylim = c(0, maxY))
   
-  df.table = ggplot(df1[Company %in% toShow], aes(x=variable, 
-                                                  y=factor(Company),
-                                                  label = value,
-                                                  col = Company, 
-                                                  group = Company)) + 
+  df.table = ggplot(df1[get(levelName) %in% toShow], aes(x=variable, 
+                                                         y=factor(get(levelName)),
+                                                         label = value,
+                                                         col = get(levelName), 
+                                                         group = get(levelName))) + 
     geom_text(size = 3, aes(label = ifelse(is.na(value), "", sprintf("%0.1f",value)))) +
     scale_color_manual(values = customColors, guide = FALSE) +
     xlab(NULL) + ylab(NULL) +
@@ -332,13 +339,47 @@ getChart = function(dfName, fopt) {
 dataTable(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
 dataChart(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
 
+
+
+
 fopt = dictContent$Formula1[2]
+
+a = eval(parse(text = paste("dataChart(df, ", fopt, ")")))
+
 dfName = deparse(substitute(df))
+
+getTable(dfName, fopt)
+
+
 
 # mytmp = layout_summary(ppt)[[2]][1]
 ppt = ppt %>%
   add_slide(layout = "Two Content", master = "Office Theme") %>%
+  ph_with_text(type = "title", str = dictContent$Name[dictContent$No == i]) %>% 
+  ph_with_text(type = "body", str = "index 3", index = 3) %>% 
+  ph_with_text(type = "body", str = "index 7", index = 7) %>% 
+  ph_with_text(type = "body", str = "index 8", index = 8) %>% 
   ph_with_gg(value = makeChart(getChart(dfName, fopt)), index = 2) %>% 
   ph_with_flextable(type="body", value=makeTable(getTable(dfName, fopt)), index=1)
+
+print(ppt, target="sample2.pptx")
+
+
+for (j in unique(dictContent$Type)) {
+  for (i in dictContent$No[dictContent$Type == j]) {
+    
+    fopt = dictContent$Formula1[dictContent$No == i]
+    if (fopt != "") {
+    ppt = ppt %>%
+      add_slide(layout = "Two Content", master = "Office Theme") %>%
+      ph_with_text(type = "title", str = dictContent$Name[dictContent$No == i]) %>%
+      ph_with_text(type = "body", str = dictContent$Region[dictContent$No == i], index = 3) %>%
+      ph_with_gg(value = makeChart(getChart(dfName, fopt)), index = 2) %>%
+      ph_with_flextable(type="body", value=makeTable(getTable(dfName, fopt)), index=1)
+      print(i)
+      
+}
+  }
+}
 
 print(ppt, target="sample2.pptx")
