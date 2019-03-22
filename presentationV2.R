@@ -116,7 +116,7 @@ makeChart = function(df){
   
   LegendRowNumber = ceiling(length(df[, unique(get(levelName))])/7)
   
-  maxY = round(max(df1$value, na.rm = TRUE), -1)
+  maxY = ceiling(max(df1$value, na.rm = TRUE)/10)*10
   
   # customColors = c("NESTLE" = "red", "NUTRICIA" = "blue", "KHOROLSKII MK" = "orange",
   #                  "FRIESLAND CAMPINA" = "brown", "ABBOTT LAB" = "black", "DMK HUMANA" = "pink")
