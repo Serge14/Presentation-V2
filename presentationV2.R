@@ -7,6 +7,7 @@ library(flextable)
 library(ggplot2)
 library(magrittr)
 library(ggpubr)
+library(stringr)
 
 # setwd("d:/Temp/3/Presentation-V2-master")
 setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
@@ -147,12 +148,18 @@ makeChart = function(df){
     guides(color = guide_legend(nrow = LegendRowNumber)) + 
     coord_cartesian(ylim = c(0, maxY))
   
-  df.table = ggplot(df1[get(levelName) %in% toShow], aes(x=variable, 
-                                                         y=factor(get(levelName)),
-                                                         label = value,
-                                                         col = get(levelName), 
-                                                         group = get(levelName))) + 
-    geom_text(size = 3, aes(label = ifelse(is.na(value), "", sprintf("%0.1f",value)))) +
+  df1[, str_pad(Company, 17)]
+  df1[, str_pad(Brand, 17)]
+  
+  df.table = ggplot(df1[get(levelName) %in% toShow],
+                    aes(
+                      x = variable,
+                      y = factor(get(levelName)),
+                      label = value,
+                      col = get(levelName),
+                      group = get(levelName)
+                    )) +
+    geom_text(size = 3, aes(label = ifelse(is.na(value), "", sprintf("%0.1f", value)))) +
     scale_color_manual(values = customColors, guide = FALSE) +
     xlab(NULL) + ylab(NULL) +
     theme_bw() +
