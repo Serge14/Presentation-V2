@@ -33,9 +33,8 @@ df = fread("/home/sergiy/Documents/Work/Nutricia/1/Data/df.csv",
 ppt = read_pptx("sample2.pptx")
 dictColors = fread("dictColor.csv")
 dictColors = dictColors[Color != ""]
-# dictContent = fread("dictContent.csv")
+dictContent = fread("dictContent.csv")
 dictContent = read.csv("dictContent.csv")
-
 
 df = df[, c("SubBrand", "Size", "Age", "Scent", "Pieces", "Value", "Volume", 
             "Channel", "EC", "AC", "Acidified",
@@ -46,6 +45,8 @@ df = df[Form != "Liquid"]
 df = df[, .(ITEMSC = sum(PiecesC), VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC)),
         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
                Additives, Region)]
+
+dfName = deparse(substitute(df))
 
 # Functions
 makeTable = function(df) {
@@ -148,8 +149,7 @@ makeChart = function(df){
     guides(color = guide_legend(nrow = LegendRowNumber)) + 
     coord_cartesian(ylim = c(0, maxY))
   
-  df1[, str_pad(Company, 17)]
-  df1[, str_pad(Brand, 17)]
+  df1[, str_pad(get(levelName), 17)]
   
   df.table = ggplot(df1[get(levelName) %in% toShow],
                     aes(
@@ -357,6 +357,7 @@ dfName = deparse(substitute(df))
 
 getTable(dfName, fopt)
 
+fopt = gsub("\"", "", fopt)
 
 
 # mytmp = layout_summary(ppt)[[2]][1]
@@ -390,3 +391,29 @@ for (j in unique(dictContent$Type)) {
 }
 
 print(ppt, target="sample2.pptx")
+
+
+
+for (i in dictContent$No) {
+  fopt = dictContent$Formula1[i]
+ 
+  if (fopt != "" & i > 1 & dictContent$Level[i] != "Segment") {
+    print(i)
+    ppt = ppt %>%
+      add_slide(layout = "Two Content", master = "Office Theme") %>%
+      ph_with_text(type = "title", str = dictContent$Name[i]) %>%
+      ph_with_text(type = "body",
+                   str = dictContent$Region[i],
+                   index = 3) %>%
+      ph_with_gg(value = makeChart(getChart(dfName, fopt)), index = 2) %>%
+      ph_with_flextable(type = "body",
+                        value = makeTable(getTable(dfName, fopt)),
+                        index = 1)
+    print(i)
+    
+  }
+}
+
+
+print(ppt, target="sample2_.pptx")
+
