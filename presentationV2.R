@@ -149,7 +149,7 @@ makeChart = function(df){
     guides(color = guide_legend(nrow = LegendRowNumber)) + 
     coord_cartesian(ylim = c(0, maxY))
   
-  df1[, str_pad(get(levelName), 17)]
+  df1[, c(eval(levelName)) := str_pad(get(levelName), 17)]
   
   df.table = ggplot(df1[get(levelName) %in% toShow],
                     aes(
@@ -392,6 +392,9 @@ for (j in unique(dictContent$Type)) {
 
 print(ppt, target="sample2.pptx")
 
+df[PriceSegment == "PREMIUM", PriceSegment := "Premium"]
+df[PriceSegment == "MAINSTREAM", PriceSegment := "Mainstream"]
+df[PriceSegment == "ECONOMY", PriceSegment := "Economy"]
 
 
 for (i in dictContent$No) {
