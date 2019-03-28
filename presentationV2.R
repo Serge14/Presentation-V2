@@ -28,7 +28,7 @@ tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
 
 # Read all necessary files
 
-df = fread("/home/sergiy/Documents/Work/Nutricia/1/Data/df.csv", 
+df = fread("/home/sergiy/Documents/Work/Nutricia/1/Data/df_Y19M01.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
 ppt = read_pptx("sample2.pptx")
 dictColors = fread("dictColor.csv")
@@ -124,12 +124,16 @@ makeChart = function(df){
   #                  "FRIESLAND CAMPINA" = "brown", "ABBOTT LAB" = "black", "DMK HUMANA" = "pink")
   customColors = dictColors$Color
   names(customColors) = dictColors$Name
-  
+  # names(customColors) = str_pad(dictColors$Name, 17)
   
   
   toShow = df[1:3, get(levelName)]
   
-  df.plot = ggplot(df1, aes(x=variable, y=value, col = get(levelName), group = get(levelName))) + 
+  df.plot = ggplot(df1, 
+                   aes(x=variable, 
+                       y=value, 
+                       col = get(levelName), 
+                       group = get(levelName))) + 
     geom_line() + 
     #geom_point() +
     # geom_text_repel(aes(label = ifelse(Company %in% toShow, round(value, 1), "")),
@@ -149,12 +153,12 @@ makeChart = function(df){
     guides(color = guide_legend(nrow = LegendRowNumber)) + 
     coord_cartesian(ylim = c(0, maxY))
   
-  df1[, c(eval(levelName)) := str_pad(get(levelName), 17)]
+  # df1[, c(eval(levelName)) := str_pad(get(levelName), 17)]
   
   df.table = ggplot(df1[get(levelName) %in% toShow],
                     aes(
                       x = variable,
-                      y = factor(get(levelName)),
+                      y = factor(str_pad(get(levelName), 19)),
                       label = value,
                       col = get(levelName),
                       group = get(levelName)
@@ -171,9 +175,7 @@ makeChart = function(df){
       plot.margin = unit(c(-0.5, 1, 0, 0.5), "lines")
     )
   
-  
-  
-  ggarrange(df.plot, df.table, heights = c(7, 1),
+   ggarrange(df.plot, df.table, heights = c(7, 1),
             ncol = 1, nrow = 2, align = "v")
   
 }
@@ -396,6 +398,7 @@ df[PriceSegment == "PREMIUM", PriceSegment := "Premium"]
 df[PriceSegment == "MAINSTREAM", PriceSegment := "Mainstream"]
 df[PriceSegment == "ECONOMY", PriceSegment := "Economy"]
 
+text_prop <- fp_text(color = "white", font.size = 18)
 
 for (i in dictContent$No) {
   fopt = dictContent$Formula1[i]
@@ -405,9 +408,14 @@ for (i in dictContent$No) {
     ppt = ppt %>%
       add_slide(layout = "Two Content", master = "Office Theme") %>%
       ph_with_text(type = "title", str = dictContent$Name[i]) %>%
-      ph_with_text(type = "body",
-                   str = dictContent$Region[i],
-                   index = 3) %>%
+      ph_with_ul(style = text_prop, 
+                 type = "body", 
+                 index = 3, 
+                 str_list = c(str_pad(dictContent$Region[i], 16)), 
+                 level_list = c(1)) %>% 
+      # ph_with_text(type = "body",
+      #              str = dictContent$Region[i],
+      #              index = 3) %>%
       ph_with_gg(value = makeChart(getChart(dfName, fopt)), index = 2) %>%
       ph_with_flextable(type = "body",
                         value = makeTable(getTable(dfName, fopt)),
@@ -418,5 +426,5 @@ for (i in dictContent$No) {
 }
 
 
-print(ppt, target="sample2_.pptx")
+print(ppt, target="sample2_2.pptx")
 
