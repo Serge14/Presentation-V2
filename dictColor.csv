@@ -1,36 +1,59 @@
 Name,Level,Color
-Hipp,Company,#00B050
-Nestle,Company,#FF0000
-Hame,Company,#808080
-Ekoniya,Company,#00B0F0
 Nutricia,Company,#0070C0
-Unef Energiya,Company,#808080
-Hero Ag,Company,#808080
-Omkk,Company,#808080
+Nestle,Company,#FF0000
+Friesland Campina,Company,#7030A0
+Dmk Humana,Company,#C00000
+Bellakt,Company,#B4C6E7
+Bibicall,Company,#92D050
+Abbott Lab,Company,#FFD966
+Hyproca Nutrition,Company,#8EA9DB
+Hipp,Company,#00B050
+Hero Ag,Company,#806000
+Alpro,Company,#808080
+ADP,Company,#00B0F0
+Molochnyi Al'yans,Company,#F8CBAD
+Infaprim,Company,#808080
+Hame,Company,#833C0C
+Ekoniya,Company,#00B0F0
+Unef Energiya,Company,#669900
+Omkk,Company,#404040
 Progress,Company,#808080
 Sady Pridon'ya,Company,#808080
-Dmk Humana,Company,#C00000
 Oazis Group,Company,#808080
 Orhei-Vit,Company,#808080
 Oasis Distribution,Company,#808080
 Heinz,Company,#92D050
 Td Slashcheva,Company,#808080
-ADP,Company,#808080
 Danone,Company,#808080
 Kaniu,Company,#808080
-Wimm-Bill-Dann,Company,#808080
-Droga Kolinska,Company,#808080
+Wimm-Bill-Dann,Company,#C00000
+Droga Kolinska,Company,#7030A0
 Novofruct,Company,#808080
 Market Solutions Group,Company,#808080
-Friesland Campina,Company,#7030A0
-Bellakt,Company,#B4C6E7
-Bibicall,Company,#808080
-Abbott Lab,Company,#808080
-Hyproca Nutrition,Company,#808080
-Alpro,Company,#808080
-Molochnyi Al'yans,Company,#808080
-Infaprim,Company,#808080
 Khorolskii Mk,Company,#F4B084
+Ekstreyd,Company,#66FF33
+Vaiz,Company,#808080
+Podravka,Company,#808080
+Red Head,Company,#808080
+Flory,Company,#808080
+Bio-Familia,Company,#808080
+Vitmark,Company,#ED7D31
+Maloritskii Kosk,Company,#808080
+Charivna Skarbnytsya,Company,#808080
+Fructal,Company,#808080
+Lat Eco Food,Company,#808080
+Salvest,Company,#808080
+Only Organic,Company,#808080
+Ivanovskii Kombinat Detskogo Pitaniya,Company,#808080
+Vitebskii Plodoovoshchnoi Kombinat,Company,#808080
+Lagoda,Company,#808080
+Kdv Minusinsk,Company,#808080
+Saray Biskuvi Vegida Sanayi,Company,#808080
+Orkla,Company,#808080
+Private label,Company,#808080
+Wakodo,Company,#808080
+Kombinat Pridneprovskii,Company,#808000
+Lustdorf,Company,#FF33CC
 Malyutka Kh,Brand,#F4B084
 Nestogen,Brand,#92D050
 Nutrilon,Brand,#0070C0

@@ -8,6 +8,7 @@ library(ggplot2)
 library(magrittr)
 library(ggpubr)
 library(stringr)
+library(forcats)
 
 # setwd("d:/Temp/3/Presentation-V2-master")
 setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
@@ -30,10 +31,10 @@ tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
 
 df = fread("/home/sergiy/Documents/Work/Nutricia/1/Data/df_Y19M01.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
-ppt = read_pptx("sample2.pptx")
+ppt = read_pptx("sample3.pptx")
 dictColors = fread("dictColor.csv")
 dictColors = dictColors[Color != ""]
-dictContent = fread("dictContent.csv")
+# dictContent = fread("dictContent.csv")
 dictContent = read.csv("dictContent.csv")
 
 df = df[, c("SubBrand", "Size", "Age", "Scent", "Pieces", "Value", "Volume", 
@@ -109,7 +110,7 @@ makeChart = function(df){
   
   names(df)[-1] = tableColnames3
   
-  levelName = strsplit(gsub('\"', "", as.character(fopt), fixed = TRUE), ", ")[[1]][2]
+  levelName = strsplit(gsub('\"', "", as.character(fopt1), fixed = TRUE), ", ")[[1]][2]
   
   df1 = melt.data.table(df, id.vars = levelName)
   # df1 = melt.data.table(df, id.vars = "Company")
@@ -177,6 +178,42 @@ makeChart = function(df){
   
    ggarrange(df.plot, df.table, heights = c(7, 1),
             ncol = 1, nrow = 2, align = "v")
+  
+}
+
+
+buildBarChart = function(df) {
+  
+  names(df)[-1] = tableColnames3
+  
+  levelName = strsplit(gsub('\"', "", as.character(fopt1), fixed = TRUE), ", ")[[1]][2]
+  
+  df1 = melt.data.table(df, id.vars = levelName)
+  
+  ggplot(df1, aes(x=variable,
+                  y=value,
+                  fill = fct_rev(Company),
+                  label = value),
+         color = textColor) +
+    geom_bar(stat="identity") +
+    geom_text(
+      aes(label = ifelse(is.na(value), "", sprintf("%0.1f",value)),
+          y = labelPosition, color = textColor),
+      vjust = 1.6,
+      size=3.5) +
+    scale_fill_brewer(palette="Blues") +
+    scale_colour_manual(values = levels(df1$textColor)) +
+    theme_minimal() +
+    ylab(NULL) + xlab(NULL) +
+    theme(legend.position="top", legend.title = element_blank(),
+          legend.text = element_text(size = 8),
+          panel.grid.minor = element_blank(),
+          panel.grid.major.y = element_blank(),
+          panel.grid.major.x = element_blank(),
+          panel.background = element_blank(),
+          axis.text.x = element_text(angle = 90, hjust = 1),
+          axis.text.y = element_blank()) +
+    guides(colour = FALSE)
   
 }
 
@@ -267,7 +304,7 @@ dataSegmentTable = function(measure, level, linesToShow, filterSegments) {
   
   if (level == "Company")  {df = data.table::dcast(df, Company~Ynb+Mnb, fun = sum, value.var = measure)}
   else if (level == "Brand") {df = data.table::dcast(df, Brand~Ynb+Mnb, fun = sum, value.var = measure)}
-  else if (level == "Segment") {df = data.table::dcast(df, PriceSegment~Ynb+Mnb, fun = sum, value.var = measure)}
+  else if (level == "PriceSegment") {df = data.table::dcast(df, PriceSegment~Ynb+Mnb, fun = sum, value.var = measure)}
   
   nc = length(df)
   
@@ -300,8 +337,8 @@ dataSegmentChart = function(measure, level, linesToShow, filterSegments) {
   
   if (level == "Company")  {df = data.table::dcast(df, Company~Ynb+Mnb, fun = sum, value.var = measure)}
   else if (level == "Brand") {df = data.table::dcast(df, Brand~Ynb+Mnb, fun = sum, value.var = measure)}
-  else if (level == "Segment") {df = data.table::dcast(df, PriceSegment~Ynb+Mnb, fun = sum, value.var = measure)}
-  else if (level == "ISSegment") {df = data.table::dcast(df, PS~Ynb+Mnb, fun = sum, value.var = measure)}
+  else if (level == "PriceSegment") {df = data.table::dcast(df, PriceSegment~Ynb+Mnb, fun = sum, value.var = measure)}
+  else if (level == "ICSegment") {df = data.table::dcast(df, PS~Ynb+Mnb, fun = sum, value.var = measure)}
   else if (level == "IMFSegment") {df = data.table::dcast(df, PS3+PS2~Ynb+Mnb, fun = sum, value.var = measure)
   df = df[,PS3 := paste(PS3, PS2)][,PS2 := NULL]}
   
@@ -343,11 +380,17 @@ getChart = function(dfName, fopt) {
   
 }
 
+getBarChart = function(dfName, fopt) {
+  
+  if(is.null(fopt)) return(alist())
+  eval(parse(text = paste("dataSegmentChart(", dfName, ",", fopt, ")")))
+  
+}
 
 
 dataTable(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
 dataChart(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
-
+dataChart(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
 
 
 
@@ -401,10 +444,34 @@ df[PriceSegment == "ECONOMY", PriceSegment := "Economy"]
 text_prop <- fp_text(color = "white", font.size = 18)
 
 for (i in dictContent$No) {
-  fopt = dictContent$Formula1[i]
+  
+  print(i)
+  
+  fopt1 = dictContent$Formula1[i]
+  fopt2 = dictContent$Formula2[i]
  
-  if (fopt != "" & i > 1 & dictContent$Level[i] != "Segment") {
-    print(i)
+  if (dictContent$Type[i] == "Two Tables") {
+    
+    ppt = ppt %>%
+      add_slide(layout = "X_Two Content", master = "Office Theme") %>%
+      ph_with_text(type = "title", str = dictContent$Name[i]) %>%
+      ph_with_ul(style = text_prop, 
+                 type = "body", 
+                 index = 3, 
+                 str_list = c(str_pad(dictContent$Region[i], 16)), 
+                 level_list = c(1)) %>% 
+      ph_with_flextable(type = "body",
+                        value = makeTable(getTable(dfName, fopt2)),
+                        index = 2) %>%
+      ph_with_flextable(type = "body",
+                        value = makeTable(getTable(dfName, fopt1)),
+                        index = 1)
+    
+  }
+  
+  if (fopt1 != "" & i > 1 & 
+      (dictContent$Level[i] == "Company" | dictContent$Level[i] == "Brand")) {
+    
     ppt = ppt %>%
       add_slide(layout = "Two Content", master = "Office Theme") %>%
       ph_with_text(type = "title", str = dictContent$Name[i]) %>%
@@ -413,16 +480,28 @@ for (i in dictContent$No) {
                  index = 3, 
                  str_list = c(str_pad(dictContent$Region[i], 16)), 
                  level_list = c(1)) %>% 
-      # ph_with_text(type = "body",
-      #              str = dictContent$Region[i],
-      #              index = 3) %>%
-      ph_with_gg(value = makeChart(getChart(dfName, fopt)), index = 2) %>%
+      ph_with_gg(value = makeChart(getChart(dfName, fopt2)), index = 2) %>%
       ph_with_flextable(type = "body",
-                        value = makeTable(getTable(dfName, fopt)),
+                        value = makeTable(getTable(dfName, fopt1)),
                         index = 1)
-    print(i)
-    
   }
+    
+    if (fopt1 != "" & i > 1 & 
+        (dictContent$Level[i] == "PriceSegment" | 
+         dictContent$Level[i] == "ICSegment" |
+         dictContent$Level[i] == "IMFSegment")) {
+      ppt = ppt %>%
+        add_slide(layout = "1_Two Content", master = "Office Theme") %>%
+        ph_with_ul(style = text_prop, 
+                   type = "body", 
+                   index = 3, 
+                   str_list = c(str_pad(dictContent$Region[i], 16)), 
+                   level_list = c(1)) %>%
+        ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt2)), index = 2) %>%
+        ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt1)), index = 1)
+        
+    }
+  print(i)
 }
 
 
