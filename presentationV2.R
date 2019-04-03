@@ -499,6 +499,7 @@ for (i in dictContent$No) {
          dictContent$Level[i] == "IMFSegment")) {
       ppt = ppt %>%
         add_slide(layout = "1_Two Content", master = "Office Theme") %>%
+        ph_with_text(type = "title", str = dictContent$Name[i]) %>%
         ph_with_ul(style = text_prop, 
                    type = "body", 
                    index = 3, 
