@@ -7,7 +7,6 @@ library(flextable)
 library(ggplot2)
 library(magrittr)
 library(ggpubr)
-library(stringr)
 library(forcats)
 
 # setwd("d:/Temp/3/Presentation-V2-master")
@@ -186,13 +185,21 @@ buildBarChart = function(df) {
   
   names(df)[-1] = tableColnames3
   
-  levelName = strsplit(gsub('\"', "", as.character(fopt1), fixed = TRUE), ", ")[[1]][2]
+  # levelName = strsplit(gsub('\"', "", as.character(fopt1), fixed = TRUE), ", ")[[1]][2]
+  # levelName = "PS3"
+  levelName = names(df)[1]
   
   df1 = melt.data.table(df, id.vars = levelName)
+  df1[, value := 100*value/sum(value), by = variable]
+  df1[, labelPosition := cumsum(value), by = .(variable)] 
+  df1[, textColor := "white"] 
+  df1[get(levelName) != "Economy", textColor := "black"] 
+  df1$textColor = as.factor(df1$textColor)
+  
   
   ggplot(df1, aes(x=variable,
                   y=value,
-                  fill = fct_rev(Company),
+                  fill = fct_rev(get(levelName)),
                   label = value),
          color = textColor) +
     geom_bar(stat="identity") +
@@ -326,7 +333,7 @@ dataSegmentTable = function(measure, level, linesToShow, filterSegments) {
   return(result)
 }
 
-dataSegmentChart = function(measure, level, linesToShow, filterSegments) {
+dataSegmentChart = function(data, measure, level, linesToShow, filterSegments) {
   
   # Create subset which consists only segments we'll work with
   #df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
@@ -453,7 +460,7 @@ for (i in dictContent$No) {
   if (dictContent$Type[i] == "Two Tables") {
     
     ppt = ppt %>%
-      add_slide(layout = "X_Two Content", master = "Office Theme") %>%
+      add_slide(layout = "1_Two Content", master = "Office Theme") %>%
       ph_with_text(type = "title", str = dictContent$Name[i]) %>%
       ph_with_ul(style = text_prop, 
                  type = "body", 
@@ -505,5 +512,5 @@ for (i in dictContent$No) {
 }
 
 
-print(ppt, target="sample2_2.pptx")
+print(ppt, target="sample3_2.pptx")
 
