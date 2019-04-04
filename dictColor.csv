@@ -146,3 +146,13 @@ Nutricia,Brand,#808080
 O.D. Prolisok,Brand,#808080
 Prostokvashino,Brand,#808080
 Sochnyi Frukt,Brand,#808080
+Base FO,IMFSegment,#af8bff
+Base Gum,IMFSegment,#a4c2f4
+Base IF,IMFSegment,#ff9999
+Plus,IMFSegment,#8adb66
+Specials,IMFSegment,#f1c232
+IMC,ICSegment,#3366cc
+IPC,ICSegment,#cfe2f3
+Economy,PriceSegment,#72a2f3
+Mainstream,PriceSegment,#7bc45c
+Premium,PriceSegment,#ffd966

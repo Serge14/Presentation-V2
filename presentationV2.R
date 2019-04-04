@@ -48,6 +48,9 @@ df = df[, .(ITEMSC = sum(PiecesC), VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC))
 
 dfName = deparse(substitute(df))
 
+customColors = dictColors$Color
+names(customColors) = dictColors$Name
+
 # Functions
 makeTable = function(df) {
   cols = names(df)[-1]
@@ -122,8 +125,7 @@ makeChart = function(df){
   
   # customColors = c("NESTLE" = "red", "NUTRICIA" = "blue", "KHOROLSKII MK" = "orange",
   #                  "FRIESLAND CAMPINA" = "brown", "ABBOTT LAB" = "black", "DMK HUMANA" = "pink")
-  customColors = dictColors$Color
-  names(customColors) = dictColors$Name
+
   # names(customColors) = str_pad(dictColors$Name, 17)
   
   
@@ -135,10 +137,10 @@ makeChart = function(df){
                        col = get(levelName), 
                        group = get(levelName))) + 
     geom_line() + 
-    #geom_point() +
-    # geom_text_repel(aes(label = ifelse(Company %in% toShow, round(value, 1), "")),
-    #                 direction = "y", nudge_y = 1,
-    #                 show.legend = FALSE, size = 3.5) +
+    # geom_point() +
+    geom_text_repel(aes(label = ifelse(Company %in% toShow, round(value, 1), "")),
+                    direction = "y", nudge_y = 1,
+                    show.legend = FALSE, size = 3.5) +
     scale_color_manual(values = customColors) +
     #scale_x_discrete(breaks = NULL) +
     theme_minimal() +
@@ -181,10 +183,11 @@ makeChart = function(df){
 }
 
 
-buildBarChart = function(df) {
+buildBarChart = function(df, fopt) {
   
   names(df)[-1] = tableColnames3
   
+  chartTitle = strsplit(gsub('\"', "", as.character(fopt), fixed = TRUE), ", ")[[1]][1]
   # levelName = strsplit(gsub('\"', "", as.character(fopt1), fixed = TRUE), ", ")[[1]][2]
   # levelName = "PS3"
   levelName = names(df)[1]
@@ -192,9 +195,9 @@ buildBarChart = function(df) {
   df1 = melt.data.table(df, id.vars = levelName)
   df1[, value := 100*value/sum(value), by = variable]
   df1[, labelPosition := cumsum(value), by = .(variable)] 
-  df1[, textColor := "white"] 
-  df1[get(levelName) != "Economy", textColor := "black"] 
-  df1$textColor = as.factor(df1$textColor)
+  # df1[, textColor := "white"] 
+  # df1[get(levelName) != "Economy", textColor := "black"] 
+  # df1$textColor = as.factor(df1$textColor)
   
   
   ggplot(df1, aes(x=variable,
@@ -205,22 +208,28 @@ buildBarChart = function(df) {
     geom_bar(stat="identity") +
     geom_text(
       aes(label = ifelse(is.na(value), "", sprintf("%0.1f",value)),
-          y = labelPosition, color = textColor),
-      vjust = 1.6,
-      size=3.5) +
-    scale_fill_brewer(palette="Blues") +
+          y = labelPosition),
+      # y = labelPosition, color = textColor),
+      vjust = 2.15,
+      size=3) +
+    scale_fill_manual(values = customColors) +
     scale_colour_manual(values = levels(df1$textColor)) +
     theme_minimal() +
     ylab(NULL) + xlab(NULL) +
-    theme(legend.position="top", legend.title = element_blank(),
+    labs(title = chartTitle) +
+    theme(legend.position=c(1, 1.05),
+          legend.title = element_blank(),
           legend.text = element_text(size = 8),
+          legend.justification="right",
           panel.grid.minor = element_blank(),
           panel.grid.major.y = element_blank(),
           panel.grid.major.x = element_blank(),
           panel.background = element_blank(),
           axis.text.x = element_text(angle = 90, hjust = 1),
-          axis.text.y = element_blank()) +
-    guides(colour = FALSE)
+          axis.text.y = element_blank(),
+          legend.spacing.x = unit(0.1, 'cm')) +
+    guides(colour = FALSE,
+          fill = guide_legend(direction = "horizontal"))
   
 }
 
@@ -346,8 +355,19 @@ dataSegmentChart = function(data, measure, level, linesToShow, filterSegments) {
   else if (level == "Brand") {df = data.table::dcast(df, Brand~Ynb+Mnb, fun = sum, value.var = measure)}
   else if (level == "PriceSegment") {df = data.table::dcast(df, PriceSegment~Ynb+Mnb, fun = sum, value.var = measure)}
   else if (level == "ICSegment") {df = data.table::dcast(df, PS~Ynb+Mnb, fun = sum, value.var = measure)}
-  else if (level == "IMFSegment") {df = data.table::dcast(df, PS3+PS2~Ynb+Mnb, fun = sum, value.var = measure)
-  df = df[,PS3 := paste(PS3, PS2)][,PS2 := NULL]}
+  # else if (level == "IMFSegment") {df = data.table::dcast(df, PS3+PS2~Ynb+Mnb, fun = sum, value.var = measure)
+  # df = df[,PS3 := paste(PS3, PS2)][,PS2 := NULL]}
+  else if (level == "IMFSegment") {
+    df1 = data.table::dcast(df[PS0 == "IMF" & PS3 == "Base"], 
+                            PS3+PS2~Ynb+Mnb, fun = sum, value.var = measure)
+    df1[, PS3 := paste(PS3, PS2)]
+    df1[, PS2 := NULL]
+    df2 = data.table::dcast(df[PS0 == "IMF" & (PS3 == "Specials" | PS3 == "Plus")], 
+                             PS3 ~Ynb+Mnb, fun = sum, value.var = measure)
+    df = rbindlist(list(df1, df2))
+  }
+  
+  
   
   nc = length(df)
   
@@ -505,8 +525,8 @@ for (i in dictContent$No) {
                    index = 3, 
                    str_list = c(str_pad(dictContent$Region[i], 16)), 
                    level_list = c(1)) %>%
-        ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt2)), index = 2) %>%
-        ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt1)), index = 1)
+        ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt2), fopt2), index = 2) %>%
+        ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt1), fopt1), index = 1)
         
     }
   print(i)
