@@ -5,6 +5,7 @@ library(stringr)
 library(officer)
 library(flextable)
 library(ggplot2)
+library(ggrepel)
 library(magrittr)
 library(ggpubr)
 library(forcats)
@@ -137,8 +138,8 @@ makeChart = function(df){
                        col = get(levelName), 
                        group = get(levelName))) + 
     geom_line() + 
-    # geom_point() +
-    geom_text_repel(aes(label = ifelse(Company %in% toShow, round(value, 1), "")),
+    geom_point() +
+    geom_text_repel(aes(label = ifelse(get(levelName) %in% toShow, round(value, 1), "")),
                     direction = "y", nudge_y = 1,
                     show.legend = FALSE, size = 3.5) +
     scale_color_manual(values = customColors) +
@@ -533,5 +534,5 @@ for (i in dictContent$No) {
 }
 
 
-print(ppt, target="sample3_2.pptx")
+print(ppt, target="sample3_4.pptx")
 
