@@ -9,6 +9,7 @@ library(ggrepel)
 library(magrittr)
 library(ggpubr)
 library(forcats)
+library(gridExtra)
 
 # setwd("d:/Temp/3/Presentation-V2-master")
 setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
@@ -131,10 +132,10 @@ ft = width(ft, j = ~ CP, width = .72)
 ft = width(ft, j = ~ L3M, width = .72) 
 ft = width(ft, j = ~ YTD, width = .72)
 
-ft = set_header_labels(ft, Name = cols[1],
-                       CP = cols[2],
-                       L3M = cols[3],
-                       YTD = cols[4])
+ft = set_header_labels(ft, Name = "Price Segment",
+                       CP = tableColnames3[19],
+                       L3M = "L3M",
+                       YTD = tableColnames3[5])
 ft = empty_blanks(ft)
 ft
 }
@@ -171,7 +172,7 @@ makeChart = function(df){
     geom_point() +
     geom_text_repel(aes(label = ifelse(get(levelName) %in% toShow, round(value, 1), "")),
                     direction = "y", nudge_y = 1,
-                    show.legend = FALSE, size = 3.5) +
+                    show.legend = FALSE, size = 3) +
     scale_color_manual(values = customColors) +
     #scale_x_discrete(breaks = NULL) +
     theme_minimal() +
@@ -244,7 +245,7 @@ buildBarChart = function(df, fopt) {
       vjust = 2.15,
       size=3) +
     scale_fill_manual(values = customColors) +
-    scale_colour_manual(values = levels(df1$textColor)) +
+    # scale_colour_manual(values = levels(df1$textColor)) +
     theme_minimal() +
     ylab(NULL) + xlab(NULL) +
     labs(title = chartTitle) +
@@ -266,22 +267,27 @@ buildBarChart = function(df, fopt) {
 
 buildPriceSegmentAbsChart = function(df) {
 
+  names(df)[-1] = tableColnames3
   levelName = names(df)[1]
   
-p1 = ggplot(df1[grepl("MAT", variable)], aes(x=variable,
-                                             y=value,
-                                             fill = fct_rev(levelName),
-                                             label = value),
+  df1 = melt.data.table(df, id.vars = levelName) 
+  df1[, labelPosition := cumsum(value), by = .(variable)] 
+  
+p1 = ggplot(df1[grepl("MAT", variable)], 
+            aes(x=variable,
+                y=value,
+                fill = fct_rev(get(levelName)),
+                label = value),
             color = textColor) +
   geom_bar(stat="identity") +
   geom_text(
     aes(label = ifelse(is.na(value), "", sprintf("%0.0f",value)),
-        y = labelPosition, color = textColor),
+        y = labelPosition),
     vjust = 2.5,
     size=3) +
   # scale_fill_brewer(palette="GrandBudapest2") +
-  scale_colour_manual(values = levels(df1$textColor)) +
-  scale_fill_manual(values = customColorsPS) +
+  # scale_colour_manual(values = levels(df1$textColor)) +
+  scale_fill_manual(values = customColors) +
   theme_minimal() +
   ylab(NULL) + xlab(NULL) +
   # labs(title="Volume") +
@@ -300,20 +306,21 @@ p1 = ggplot(df1[grepl("MAT", variable)], aes(x=variable,
   guides(colour = FALSE,
          fill = guide_legend(direction = "horizontal"))
 
-p2 = ggplot(df1[grepl("YTD", variable)], aes(x=variable,
-                                             y=value,
-                                             fill = fct_rev(levelName),
-                                             label = value),
+p2 = ggplot(df1[grepl("YTD", variable)], 
+            aes(x=variable,
+                y=value,
+                fill = fct_rev(get(levelName)),
+                label = value),
             color = textColor) +
   geom_bar(stat="identity") +
   geom_text(
     aes(label = ifelse(is.na(value), "", sprintf("%0.0f",value)),
-        y = labelPosition, color = textColor),
+        y = labelPosition),
     vjust = 2.5,
     size=3) +
   # scale_fill_brewer(palette="GrandBudapest2") +
-  scale_colour_manual(values = levels(df1$textColor)) +
-  scale_fill_manual(values = customColorsPS) +
+  # scale_colour_manual(values = levels(df1$textColor)) +
+  scale_fill_manual(values = customColors) +
   theme_minimal() +
   ylab(NULL) + xlab(NULL) +
   # labs(title="Volume") +
@@ -331,20 +338,21 @@ p2 = ggplot(df1[grepl("YTD", variable)], aes(x=variable,
   guides(colour = FALSE,
          fill = guide_legend(direction = "horizontal"))
 
-p3 = ggplot(df1[19:57], aes(x=variable,
-                            y=value,
-                            fill = fct_rev(levelName),
-                            label = value),
+p3 = ggplot(df1[19:57], 
+            aes(x=variable,
+                y=value,
+                fill = fct_rev(get(levelName)),
+                label = value),
             color = textColor) +
   geom_bar(stat="identity") +
   geom_text(
     aes(label = ifelse(is.na(value), "", sprintf("%0.0f",value)),
-        y = labelPosition, color = textColor),
+        y = labelPosition),
     vjust = 2.5,
     size=3) +
   # scale_fill_brewer(palette="GrandBudapest2") +
-  scale_colour_manual(values = levels(df1$textColor)) +
-  scale_fill_manual(values = customColorsPS) +
+  # scale_colour_manual(values = levels(df1$textColor)) +
+  scale_fill_manual(values = customColors) +
   theme_minimal() +
   ylab(NULL) + xlab(NULL) +
   labs(title=" ") +
@@ -451,7 +459,7 @@ dataChart = function(data, measure, level, linesToShow, filterSegments) {
   return(result)
 }
 
-dataSegmentTable = function(measure, level, linesToShow, filterSegments) {
+dataSegmentTable = function(data, measure, level, linesToShow, filterSegments) {
   
   # Create subset which consists only segments we'll work with
   #df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
@@ -539,6 +547,13 @@ getTable = function(dfName, fopt) {
   
   if(is.null(fopt)) return(alist())
   eval(parse(text = paste("dataTable(", dfName, ",", fopt, ")")))
+  
+}
+
+getPriceSegmentTable = function(dfName, fopt) {
+  
+  if(is.null(fopt)) return(alist())
+  eval(parse(text = paste("dataSegmentTable(", dfName, ",", fopt, ")")))
   
 }
 
@@ -682,8 +697,8 @@ for (i in dictContent$No) {
                  index = 3, 
                  str_list = c(str_pad(dictContent$Region[i], 16)), 
                  level_list = c(1)) %>%
-      ph_with_gg(value = buildPriceSegmentAbsChart(getBarChart(dfName, fopt2), fopt2), index = 2) %>%
-      ph_with_flextable(value = ftPriceSegmentAbs(getBarChart(dfName, fopt1), fopt1), index = 1)
+      ph_with_gg(value = buildPriceSegmentAbsChart(getBarChart(dfName, fopt2)), index = 2) %>%
+      ph_with_flextable(value = ftPriceSegmentAbs(getPriceSegmentTable(dfName, fopt1)), index = 1)
     
   }  
   
@@ -691,5 +706,5 @@ for (i in dictContent$No) {
 }
 
 
-print(ppt, target="sample3_4.pptx")
+print(ppt, target="sample3_5.pptx")
 
