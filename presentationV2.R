@@ -55,7 +55,7 @@ names(customColors) = dictColors$Name
 # Functions
 makeTable = function(df) {
   cols = names(df)[-1]
-  df[,(cols) := round(.SD, 1), .SDcols = cols]
+  # df[,(cols) := round(.SD, 1), .SDcols = cols]
   
   cols = c(names(df)[1], "col_1", names(df)[2:3], "col_2", 
            names(df)[4:5], "col_3", names(df)[6:7])
@@ -107,6 +107,36 @@ makeTable = function(df) {
   
   #ft = empty_blanks(autofit(ft))
   ft
+}
+
+ftPriceSegmentAbs = function(df) {
+
+cols = names(df)
+names(df) = c("Name", "CP", "L3M", "YTD")
+cols2 = c(names(df)[1], "col_1", names(df)[2], names(df)[3], names(df)[4])
+
+ft = regulartable(df, col_keys = cols2)
+ft = theme_zebra(ft)
+ft = bg(ft, bg = "#2F75B5", part = "header") #  , #0D47A1 - dark blue 
+ft <- color(ft, color = "white", part = "header")
+
+#ft = fontsize(ft, size = 9)
+
+ft = colformat_num(ft, cols2, digits = 1)
+
+ft = width(ft, j = ~ col_1, width = .05)
+
+ft = width(ft, j = ~ Name, width = 1.65) 
+ft = width(ft, j = ~ CP, width = .72) 
+ft = width(ft, j = ~ L3M, width = .72) 
+ft = width(ft, j = ~ YTD, width = .72)
+
+ft = set_header_labels(ft, Name = cols[1],
+                       CP = cols[2],
+                       L3M = cols[3],
+                       YTD = cols[4])
+ft = empty_blanks(ft)
+ft
 }
 
 makeChart = function(df){
@@ -233,6 +263,117 @@ buildBarChart = function(df, fopt) {
           fill = guide_legend(direction = "horizontal"))
   
 }
+
+buildPriceSegmentAbsChart = function(df) {
+
+  levelName = names(df)[1]
+  
+p1 = ggplot(df1[grepl("MAT", variable)], aes(x=variable,
+                                             y=value,
+                                             fill = fct_rev(levelName),
+                                             label = value),
+            color = textColor) +
+  geom_bar(stat="identity") +
+  geom_text(
+    aes(label = ifelse(is.na(value), "", sprintf("%0.0f",value)),
+        y = labelPosition, color = textColor),
+    vjust = 2.5,
+    size=3) +
+  # scale_fill_brewer(palette="GrandBudapest2") +
+  scale_colour_manual(values = levels(df1$textColor)) +
+  scale_fill_manual(values = customColorsPS) +
+  theme_minimal() +
+  ylab(NULL) + xlab(NULL) +
+  # labs(title="Volume") +
+  # theme(legend.position=c(1, 1.05),
+  theme(legend.position="none",
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        legend.justification="right",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.background = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text.y = element_blank(),
+        legend.spacing.x = unit(0.1, 'cm')) +
+  guides(colour = FALSE,
+         fill = guide_legend(direction = "horizontal"))
+
+p2 = ggplot(df1[grepl("YTD", variable)], aes(x=variable,
+                                             y=value,
+                                             fill = fct_rev(levelName),
+                                             label = value),
+            color = textColor) +
+  geom_bar(stat="identity") +
+  geom_text(
+    aes(label = ifelse(is.na(value), "", sprintf("%0.0f",value)),
+        y = labelPosition, color = textColor),
+    vjust = 2.5,
+    size=3) +
+  # scale_fill_brewer(palette="GrandBudapest2") +
+  scale_colour_manual(values = levels(df1$textColor)) +
+  scale_fill_manual(values = customColorsPS) +
+  theme_minimal() +
+  ylab(NULL) + xlab(NULL) +
+  # labs(title="Volume") +
+  theme(legend.position="none",
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        legend.justification="right",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.background = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text.y = element_blank(),
+        legend.spacing.x = unit(0.1, 'cm')) +
+  guides(colour = FALSE,
+         fill = guide_legend(direction = "horizontal"))
+
+p3 = ggplot(df1[19:57], aes(x=variable,
+                            y=value,
+                            fill = fct_rev(levelName),
+                            label = value),
+            color = textColor) +
+  geom_bar(stat="identity") +
+  geom_text(
+    aes(label = ifelse(is.na(value), "", sprintf("%0.0f",value)),
+        y = labelPosition, color = textColor),
+    vjust = 2.5,
+    size=3) +
+  # scale_fill_brewer(palette="GrandBudapest2") +
+  scale_colour_manual(values = levels(df1$textColor)) +
+  scale_fill_manual(values = customColorsPS) +
+  theme_minimal() +
+  ylab(NULL) + xlab(NULL) +
+  labs(title=" ") +
+  theme(legend.position=c(0.0, 1.1),
+        legend.title = element_blank(),
+        legend.text = element_text(size = 8),
+        legend.justification="left",
+        panel.grid.minor = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.background = element_blank(),
+        axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.text.y = element_blank(),
+        legend.spacing.x = unit(0.15, 'cm')) +
+  guides(colour = FALSE,
+         fill = guide_legend(direction = "horizontal"))
+
+# ggarrange(p1, p2, p3, align = "v", nrow = 2, ncol= 2, common.legend = TRUE)
+p=ggarrange(
+  grid.arrange(
+    grobs = list(p1, p2, p3),
+    widths = c(4, 1, 1),
+    layout_matrix = rbind(c(NA, 1, 2),
+                          c(3, 3, 3))
+  )
+)
+p
+}
+
 
 dataTable = function(data, measure, level, linesToShow, filterSegments = NULL) {
   
@@ -530,6 +671,22 @@ for (i in dictContent$No) {
         ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt1), fopt1), index = 1)
         
     }
+  
+  if (fopt1 != "" & i > 1 & 
+      dictContent$Level[i] == "PriceSegmentAbs") {
+    ppt = ppt %>%
+      add_slide(layout = "2_Two Content", master = "Office Theme") %>%
+      ph_with_text(type = "title", str = dictContent$Name[i]) %>%
+      ph_with_ul(style = text_prop, 
+                 type = "body", 
+                 index = 3, 
+                 str_list = c(str_pad(dictContent$Region[i], 16)), 
+                 level_list = c(1)) %>%
+      ph_with_gg(value = buildPriceSegmentAbsChart(getBarChart(dfName, fopt2), fopt2), index = 2) %>%
+      ph_with_flextable(value = ftPriceSegmentAbs(getBarChart(dfName, fopt1), fopt1), index = 1)
+    
+  }  
+  
   print(i)
 }
 
