@@ -32,7 +32,7 @@ tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
 
 df = fread("/home/sergiy/Documents/Work/Nutricia/1/Data/df_Y19M01.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
-ppt = read_pptx("sample3.pptx")
+ppt = read_pptx("sample5.pptx")
 dictColors = fread("dictColor.csv")
 dictColors = dictColors[Color != ""]
 # dictContent = fread("dictContent.csv")
@@ -571,56 +571,6 @@ getBarChart = function(dfName, fopt) {
   
 }
 
-
-dataTable(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
-dataChart(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
-dataChart(df, "Volume", "Company", 11, 'PS0 == "IMF" | PS2 == "DRY FOOD" | PS3 == "SAVOURY MEAL" | PS3 == "FRUITS"')
-
-
-
-fopt = dictContent$Formula1[2]
-
-a = eval(parse(text = paste("dataChart(df, ", fopt, ")")))
-
-dfName = deparse(substitute(df))
-
-getTable(dfName, fopt)
-
-fopt = gsub("\"", "", fopt)
-
-
-# mytmp = layout_summary(ppt)[[2]][1]
-ppt = ppt %>%
-  add_slide(layout = "Two Content", master = "Office Theme") %>%
-  ph_with_text(type = "title", str = dictContent$Name[dictContent$No == i]) %>% 
-  ph_with_text(type = "body", str = "index 3", index = 3) %>% 
-  ph_with_text(type = "body", str = "index 7", index = 7) %>% 
-  ph_with_text(type = "body", str = "index 8", index = 8) %>% 
-  ph_with_gg(value = makeChart(getChart(dfName, fopt)), index = 2) %>% 
-  ph_with_flextable(type="body", value=makeTable(getTable(dfName, fopt)), index=1)
-
-print(ppt, target="sample2.pptx")
-
-
-for (j in unique(dictContent$Type)) {
-  for (i in dictContent$No[dictContent$Type == j]) {
-    
-    fopt = dictContent$Formula1[dictContent$No == i]
-    if (fopt != "") {
-    ppt = ppt %>%
-      add_slide(layout = "Two Content", master = "Office Theme") %>%
-      ph_with_text(type = "title", str = dictContent$Name[dictContent$No == i]) %>%
-      ph_with_text(type = "body", str = dictContent$Region[dictContent$No == i], index = 3) %>%
-      ph_with_gg(value = makeChart(getChart(dfName, fopt)), index = 2) %>%
-      ph_with_flextable(type="body", value=makeTable(getTable(dfName, fopt)), index=1)
-      print(i)
-      
-}
-  }
-}
-
-print(ppt, target="sample2.pptx")
-
 df[PriceSegment == "PREMIUM", PriceSegment := "Premium"]
 df[PriceSegment == "MAINSTREAM", PriceSegment := "Mainstream"]
 df[PriceSegment == "ECONOMY", PriceSegment := "Economy"]
@@ -705,6 +655,11 @@ for (i in dictContent$No) {
   print(i)
 }
 
+ppt = ppt %>%
+  remove_slide(index = 1) %>%
+  remove_slide(index = 1) %>% 
+  remove_slide(index = 1) %>% 
+  remove_slide(index = 1) 
 
 print(ppt, target="sample3_5.pptx")
 
