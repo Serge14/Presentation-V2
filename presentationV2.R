@@ -170,9 +170,11 @@ makeChart = function(df){
                        group = get(levelName))) + 
     geom_line() + 
     geom_point() +
-    geom_text_repel(aes(label = ifelse(get(levelName) %in% toShow, round(value, 1), "")),
-                    direction = "y", nudge_y = 1,
-                    show.legend = FALSE, size = 3) +
+    # geom_text_repel(aes(label = ifelse(get(levelName) %in% toShow, 
+    #                                    sprintf("%0.1f", value), "")),
+    #                 direction = "y", nudge_y = 0.5,
+    #                 show.legend = FALSE, size = 3,
+    #                 min.segment.length = 0.5) +
     scale_color_manual(values = customColors) +
     #scale_x_discrete(breaks = NULL) +
     theme_minimal() +
