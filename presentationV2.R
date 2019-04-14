@@ -586,7 +586,7 @@ for (i in dictContent$No) {
   fopt1 = dictContent$Formula1[i]
   fopt2 = dictContent$Formula2[i]
  
-  if (dictContent$Type[i] == "Two Tables") {
+  if (dictContent$Type[i] == "Two tables") {
     
     ppt = ppt %>%
       add_slide(layout = "1_Two Content", master = "Office Theme") %>%
@@ -657,11 +657,11 @@ for (i in dictContent$No) {
   print(i)
 }
 
-ppt = ppt %>%
-  remove_slide(index = 1) %>%
-  remove_slide(index = 1) %>% 
-  remove_slide(index = 1) %>% 
-  remove_slide(index = 1) 
+# ppt = ppt %>%
+#   remove_slide(index = 1) %>%
+#   remove_slide(index = 1) %>% 
+#   remove_slide(index = 1) %>% 
+#   remove_slide(index = 1) 
 
 print(ppt, target="sample3_5.pptx")
 
