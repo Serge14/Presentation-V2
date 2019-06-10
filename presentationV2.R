@@ -14,23 +14,28 @@ library(gridExtra)
 # setwd("d:/Temp/3/Presentation-V2-master")
 setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
 
-YTD.No = 1
+YTD.No = 4
 
-CP = "JAN 19"
+CP = "APR 19"
 vsPP = "vs. PP"
 YTD = "YTD 19"
 difYTD = "vs YTD18"
 MAT = "MAT 19"
 difMAT = "vs MAT18"
 
+# tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
+#                    "JAN 18", "FEB 18", "MAR 18", "APR 18", "MAY 18", "JUN 18", "JUL 18",
+#                    "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19")
+
 tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
-                   "JAN 18", "FEB 18", "MAR 18", "APR 18", "MAY 18", "JUN 18", "JUL 18",
-                   "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19")
+                   "APR 18", "MAY 18", "JUN 18", "JUL 18",
+                   "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19",
+                   "FEB 19", "MAR 19", "APR 19")
 
 
 # Read all necessary files
 
-df = fread("/home/sergiy/Documents/Work/Nutricia/1/Data/df_Y19M01.csv", 
+df = fread("/home/sergiy/Documents/Work/Nutricia/Rework/201904/df_N.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
 ppt = read_pptx("sample5.pptx")
 dictColors = fread("dictColor.csv")
@@ -44,9 +49,14 @@ df = df[, c("SubBrand", "Size", "Age", "Scent", "Pieces", "Value", "Volume",
 
 df = df[Form != "Liquid"]
 
-df = df[, .(ITEMSC = sum(PiecesC), VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC)),
+# df = df[, .(ITEMSC = sum(PiecesC), VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC)),
+#         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
+#                Additives, Region)]
+
+df = df[, .(VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC)),
         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
                Additives, Region)]
+
 
 dfName = deparse(substitute(df))
 
@@ -391,10 +401,11 @@ dataTable = function(data, measure, level, linesToShow, filterSegments = NULL) {
   #df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
   #          by = .(Brand, PS2, PS3, PS, Company, Ynb, Mnb, Form, Additives, PriceSegment)]
   
-  df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
+  # df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
+  #           by = .(Brand, PS0, PS2, PS3, PS, Company, Ynb, Mnb, PriceSegment)]
+  
+  df = data[eval(parse(text = filterSegments)), .(Value = sum(VALUEC), Volume = sum(VOLUMEC)),
             by = .(Brand, PS0, PS2, PS3, PS, Company, Ynb, Mnb, PriceSegment)]
-  
-  
   
   if (level == "Company")  {df = data.table::dcast(df, Company~Ynb+Mnb, fun = sum, value.var = measure)}
   else if (level == "Brand") {df = data.table::dcast(df, Brand~Ynb+Mnb, fun = sum, value.var = measure)}
@@ -431,7 +442,10 @@ dataChart = function(data, measure, level, linesToShow, filterSegments) {
   #df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
   #          by = .(Brand, PS2, PS3, PS, Company, Ynb, Mnb, Form, Additives)]
   
-  df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
+  # df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
+  #           by = .(Brand, PS0, PS2, PS3, PS, Company, Ynb, Mnb, PriceSegment)]
+  
+  df = data[eval(parse(text = filterSegments)), .(Value = sum(VALUEC), Volume = sum(VOLUMEC)),
             by = .(Brand, PS0, PS2, PS3, PS, Company, Ynb, Mnb, PriceSegment)]
   
   if (level == "Company")  {df = data.table::dcast(df, Company~Ynb+Mnb, fun = sum, value.var = measure)}
@@ -467,7 +481,10 @@ dataSegmentTable = function(data, measure, level, linesToShow, filterSegments) {
   #df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
   #          by = .(Brand, PS2, PS3, PS, Company, Ynb, Mnb, Form, Additives)]
   
-  df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
+  # df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
+  #           by = .(Brand, PS0, PS2, PS3, PS, Company, Ynb, Mnb, PriceSegment)]
+  
+  df = data[eval(parse(text = filterSegments)), .(Value = sum(VALUEC), Volume = sum(VOLUMEC)),
             by = .(Brand, PS0, PS2, PS3, PS, Company, Ynb, Mnb, PriceSegment)]
   
   if (level == "Company")  {df = data.table::dcast(df, Company~Ynb+Mnb, fun = sum, value.var = measure)}
@@ -500,7 +517,10 @@ dataSegmentChart = function(data, measure, level, linesToShow, filterSegments) {
   #df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
   #          by = .(Brand, PS2, PS3, PS, Company, Ynb, Mnb, Form, Additives)]
   
-  df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
+  # df = data[eval(parse(text = filterSegments)), .(Items = sum(ITEMSC), Value = sum(VALUEC), Volume = sum(VOLUMEC)),
+  #           by = .(Brand, PS0, PS2, PS3, PS, Company, Ynb, Mnb, PriceSegment)]
+  
+  df = data[eval(parse(text = filterSegments)), .(Value = sum(VALUEC), Volume = sum(VOLUMEC)),
             by = .(Brand, PS0, PS2, PS3, PS, Company, Ynb, Mnb, PriceSegment)]
   
   if (level == "Company")  {df = data.table::dcast(df, Company~Ynb+Mnb, fun = sum, value.var = measure)}
@@ -578,6 +598,9 @@ df[PriceSegment == "MAINSTREAM", PriceSegment := "Mainstream"]
 df[PriceSegment == "ECONOMY", PriceSegment := "Economy"]
 
 text_prop <- fp_text(color = "white", font.size = 18)
+
+# until regions are added
+dictContent = dictContent[dictContent$Region == "Ukraine",]
 
 for (i in dictContent$No) {
   
@@ -663,5 +686,5 @@ for (i in dictContent$No) {
 #   remove_slide(index = 1) %>% 
 #   remove_slide(index = 1) 
 
-print(ppt, target="sample3_5.pptx")
+print(ppt, target="sample3_5_N.pptx")
 
