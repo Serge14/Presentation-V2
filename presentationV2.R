@@ -53,6 +53,9 @@ df = df[Form != "Liquid"]
 #         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
 #                Additives, Region)]
 
+# until additives and regions are added
+df[, `:=`(Additives = "NF", Region = "Ukraine")]
+
 df = df[, .(VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC)),
         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
                Additives, Region)]
@@ -64,6 +67,8 @@ customColors = dictColors$Color
 names(customColors) = dictColors$Name
 
 # Functions
+
+# Summary table: Companies and Brands by Segments and Sub-Segments
 makeTable = function(df) {
   cols = names(df)[-1]
   # df[,(cols) := round(.SD, 1), .SDcols = cols]
@@ -80,11 +85,15 @@ makeTable = function(df) {
   ft = bg(ft, bg = "#2F75B5", part = "header") #  , #0D47A1 - dark blue
   ft <- color(ft, color = "white", part = "header")
   
-  #ft = fontsize(ft, size = 9)
+  ft = fontsize(ft, size = 10, part = "header")
+  ft = fontsize(ft, size = 10, part = "body")
   
   ft <- color(ft, ~ vsPP < 0, ~ vsPP, color = "red")
   ft <- color(ft, ~ difYTD < 0, ~ difYTD, color = "red")
   ft <- color(ft, ~ difMAT < 0, ~ difMAT, color = "red")
+  
+  ft <- align( ft, j = "Name", align = "right", part = "all" )
+  # ft <- padding(ft, j = "Name", padding.left = 1)
   
   # ft <- bold(ft, ~ Name == "MILUPA", bold = TRUE)
   
@@ -114,9 +123,7 @@ makeTable = function(df) {
                          difMAT = difMAT)
   ft = empty_blanks(ft)
   
-  
-  
-  #ft = empty_blanks(autofit(ft))
+  # ft = empty_blanks(autofit(ft))
   ft
 }
 
@@ -132,6 +139,8 @@ ft = bg(ft, bg = "#2F75B5", part = "header") #  , #0D47A1 - dark blue
 ft <- color(ft, color = "white", part = "header")
 
 #ft = fontsize(ft, size = 9)
+
+ft <- align( ft, j = "Name", align = "right", part = "all" )
 
 ft = colformat_num(ft, cols2, digits = 1)
 
@@ -273,8 +282,8 @@ buildBarChart = function(df, fopt) {
           axis.text.y = element_blank(),
           legend.spacing.x = unit(0.1, 'cm')) +
     guides(colour = FALSE,
-          fill = guide_legend(direction = "horizontal"))
-  
+          fill = guide_legend(direction = "horizontal", nrow = 1))
+  # colour  = FALSE
 }
 
 buildPriceSegmentAbsChart = function(df) {
@@ -602,7 +611,10 @@ text_prop <- fp_text(color = "white", font.size = 18)
 # until regions are added
 dictContent = dictContent[dictContent$Region == "Ukraine",]
 
+# ppt = read_pptx("sample5.pptx")
+
 for (i in dictContent$No) {
+  # for (i in 1:10) {
   
   print(i)
   
@@ -688,3 +700,9 @@ for (i in dictContent$No) {
 
 print(ppt, target="sample3_5_N.pptx")
 
+# ppt = ppt %>%
+#   add_slide(layout = "Two Content", master = "Office Theme") %>%
+#   ph_with_text(type = "title", str = dictContent$Name[i]) %>%
+#   ph_with_flextable(type = "body",
+#                     value = makeTable(getTable(dfName, fopt1)),
+#                     index = 1)
