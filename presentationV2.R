@@ -14,9 +14,9 @@ library(gridExtra)
 # setwd("d:/Temp/3/Presentation-V2-master")
 setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
 
-YTD.No = 4
+YTD.No = 5
 
-CP = "APR 19"
+CP = "MAY 19"
 vsPP = "vs. PP"
 YTD = "YTD 19"
 difYTD = "vs YTD18"
@@ -28,14 +28,14 @@ difMAT = "vs MAT18"
 #                    "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19")
 
 tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
-                   "APR 18", "MAY 18", "JUN 18", "JUL 18",
+                   "MAY 18", "JUN 18", "JUL 18",
                    "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19",
-                   "FEB 19", "MAR 19", "APR 19")
+                   "FEB 19", "MAR 19", "APR 19", "MAY 19")
 
 
 # Read all necessary files
 
-df = fread("/home/sergiy/Documents/Work/Nutricia/Rework/201904/df_N.csv", 
+df = fread("/home/sergiy/Documents/Work/Nutricia/Rework/201905/New regions/1/df.regions.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
 ppt = read_pptx("sample5.pptx")
 dictColors = fread("dictColor.csv")
@@ -54,7 +54,7 @@ df = df[Form != "Liquid"]
 #                Additives, Region)]
 
 # until additives and regions are added
-df[, `:=`(Additives = "NF", Region = "Ukraine")]
+df[, `:=`(Additives = "NF")]
 
 df = df[, .(VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC)),
         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
@@ -65,11 +65,14 @@ dfName = deparse(substitute(df))
 
 customColors = dictColors$Color
 names(customColors) = dictColors$Name
+list.Bold = c("Nutricia", df[Company == "Nutricia", unique(Brand)])
 
 # Functions
 
 # Summary table: Companies and Brands by Segments and Sub-Segments
 makeTable = function(df) {
+  
+  df = df[YTD_MS > 0.1]
   cols = names(df)[-1]
   # df[,(cols) := round(.SD, 1), .SDcols = cols]
   
@@ -85,9 +88,6 @@ makeTable = function(df) {
   ft = bg(ft, bg = "#2F75B5", part = "header") #  , #0D47A1 - dark blue
   ft <- color(ft, color = "white", part = "header")
   
-  ft = fontsize(ft, size = 10, part = "header")
-  ft = fontsize(ft, size = 10, part = "body")
-  
   ft <- color(ft, ~ vsPP < 0, ~ vsPP, color = "red")
   ft <- color(ft, ~ difYTD < 0, ~ difYTD, color = "red")
   ft <- color(ft, ~ difMAT < 0, ~ difMAT, color = "red")
@@ -95,12 +95,19 @@ makeTable = function(df) {
   ft <- align( ft, j = "Name", align = "right", part = "all" )
   # ft <- padding(ft, j = "Name", padding.left = 1)
   
-  # ft <- bold(ft, ~ Name == "MILUPA", bold = TRUE)
+  ft <- bold(ft, ~ Name %in% list.Bold, bold = TRUE)
   
   ft = colformat_num(ft, cols2, digits = 1)
   
   ft <- add_footer(ft, Name = "* The table presents market shares and differences vs previous period or the same period last year." )
   ft <- merge_at(ft, j = 1:10, part = "footer")
+  
+  ft = fontsize(ft, size = 10, part = "header")
+  ft = fontsize(ft, size = 10, part = "body")
+  ft = fontsize(ft, size = 8, part = "footer")
+  
+  ft <- color(ft, color = "grey", part = "footer")
+  
   
   ft = width(ft, j = ~ col_1, width = .05)
   ft = width(ft, j = ~ col_2, width = .05)
@@ -161,6 +168,7 @@ ft
 
 makeChart = function(df){
   
+  df = df[YTD_MS > 0.1]
   names(df)[-1] = tableColnames3
   
   levelName = strsplit(gsub('\"', "", as.character(fopt1), fixed = TRUE), ", ")[[1]][2]
@@ -609,7 +617,7 @@ df[PriceSegment == "ECONOMY", PriceSegment := "Economy"]
 text_prop <- fp_text(color = "white", font.size = 18)
 
 # until regions are added
-dictContent = dictContent[dictContent$Region == "Ukraine",]
+# dictContent = dictContent[dictContent$Region == "Ukraine",]
 
 # ppt = read_pptx("sample5.pptx")
 
@@ -698,7 +706,7 @@ for (i in dictContent$No) {
 #   remove_slide(index = 1) %>% 
 #   remove_slide(index = 1) 
 
-print(ppt, target="sample3_5_N.pptx")
+print(ppt, target="sample3_6.pptx")
 
 # ppt = ppt %>%
 #   add_slide(layout = "Two Content", master = "Office Theme") %>%
