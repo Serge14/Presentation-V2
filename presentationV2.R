@@ -14,28 +14,28 @@ library(gridExtra)
 # setwd("d:/Temp/3/Presentation-V2-master")
 setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
 
-YTD.No = 5
+YTD.No = 6
 
-CP = "MAY 19"
+CP = "JUN 20"
 vsPP = "vs. PP"
-YTD = "YTD 19"
-difYTD = "vs YTD18"
-MAT = "MAT 19"
-difMAT = "vs MAT18"
+YTD = "YTD 20"
+difYTD = "vs YTD19"
+MAT = "MAT 20"
+difMAT = "vs MAT19"
 
 # tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
 #                    "JAN 18", "FEB 18", "MAR 18", "APR 18", "MAY 18", "JUN 18", "JUL 18",
 #                    "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19")
 
-tableColnames3 = c("MAT 18", "MAT 19", " .", "YTD 18", "YTD 19", " ..",
-                   "MAY 18", "JUN 18", "JUL 18",
-                   "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19",
-                   "FEB 19", "MAR 19", "APR 19", "MAY 19")
+tableColnames3 = c("MAT 19", "MAT 20", " .", "YTD 19", "YTD 20", " ..",
+                   "JUN 19", "JUL 19",
+                   "AUG 19", "SEP 19", "OCT 19", "NOV 19", "DEC 19", "JAN 20",
+                   "FEB 20", "MAR 20", "APR 20", "MAY 20", "JUN 20")
 
 
 # Read all necessary files
 
-df = fread("/home/sergiy/Documents/Work/Nutricia/Rework/201905/New regions/1/df.regions.csv", 
+df = fread("/home/sergiy/Documents/Work/Nutricia/Data/202006/df.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
 ppt = read_pptx("sample5.pptx")
 dictColors = fread("dictColor.csv")
@@ -43,11 +43,11 @@ dictColors = dictColors[Color != ""]
 # dictContent = fread("dictContent.csv")
 dictContent = read.csv("dictContent.csv")
 
-df = df[, c("SubBrand", "Size", "Age", "Scent", "Pieces", "Value", "Volume", 
+df = df[, c("SubBrand", "Size", "Age", "Scent", "Value", "Volume", 
             "Channel", "EC", "AC", "Acidified",
             "Scent2", "ScentType", "GlobalPriceSegment") := NULL]
 
-df = df[Form != "Liquid"]
+df = df[!(PS0 == "IMF" & Form == "Liquid")]
 
 # df = df[, .(ITEMSC = sum(PiecesC), VALUEC = sum(ValueC), VOLUMEC = sum(VolumeC)),
 #         by = .(Ynb, Mnb, Brand, PS0, PS2, PS3, PS, Company, PriceSegment, Form,
@@ -551,7 +551,7 @@ dataSegmentChart = function(data, measure, level, linesToShow, filterSegments) {
                             PS3+PS2~Ynb+Mnb, fun = sum, value.var = measure)
     df1[, PS3 := paste(PS3, PS2)]
     df1[, PS2 := NULL]
-    df2 = data.table::dcast(df[PS0 == "IMF" & (PS3 == "Specials" | PS3 == "Plus")], 
+    df2 = data.table::dcast(df[PS0 == "IMF" & (PS3 == "Specials" | PS3 == "Base Plus")], 
                              PS3 ~Ynb+Mnb, fun = sum, value.var = measure)
     df = rbindlist(list(df1, df2))
   }

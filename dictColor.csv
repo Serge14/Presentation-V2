@@ -1,4 +1,9 @@
 Name,Level,Color
+Ausnutria Group,Company,#8EA9DB
+Fleur Alpine Uab,Company,#808080
+Slodych,Company,#808080
+Belfood,Company,#808080
+Profitzernomarket,Company,#808080
 Nutricia,Company,#0070C0
 Nestle,Company,#FF0000
 Friesland Campina,Company,#7030A0
@@ -20,9 +25,11 @@ Omkk,Company,#404040
 Progress,Company,#808080
 Sady Pridon'ya,Company,#808080
 Oazis Group,Company,#808080
+Oasis Group,Company,#808080
 Orhei-Vit,Company,#808080
 Oasis Distribution,Company,#808080
 Heinz,Company,#92D050
+Kraft Heinz,Company,#92D050
 Td Slashcheva,Company,#808080
 Danone,Company,#808080
 Kaniu,Company,#808080
@@ -55,6 +62,10 @@ Private label,Company,#808080
 Wakodo,Company,#808080
 Kombinat Pridneprovskii,Company,#808000
 Lustdorf,Company,#FF33CC
+Mamako,Brand,#808080
+Fleur Alpine,Brand,#808080
+Holle,Brand,#808080
+Lapushka,Brand,#808000
 Malyutka Kh,Brand,#F4B084
 Nestogen,Brand,#92D050
 Nutrilon,Brand,#0070C0
@@ -84,6 +95,7 @@ Tema,Brand,#808080
 Fruto Nyanya,Brand,#808080
 Gerber,Brand,#0070C0
 Malyshka,Brand,#C65911
+Malyshka Kh,Brand,#C65911
 Begemotik Bondi,Brand,#FF33CC
 Zagora,Brand,#F4B084
 Chudo-Chado,Brand,#ED7D31
@@ -94,14 +106,17 @@ Malyatko,Brand,#00B0F0
 Krokha,Brand,#669900
 Fruta Pyureshka,Brand,#FF33CC
 Lozhka V Ladochke,Brand,#404040
+Lozhka V Ladoshke,Brand,#404040
 Kabrita,Brand,#8EA9DB
 Rasti Bol'shoi,Brand,#806000
 Chipa Ekstramalyshok,Brand,#339966
+Chipa,Brand,#339966
 Nenni,Brand,#92D050
 Spelenok,Brand,#808080
 Bambolina,Brand,#808080
 Vita,Brand,#808080
 Malen'koe Schast'e,Brand,#808080
+Malenkoe Schaste,Brand,#808080
 Babushkino Lukoshko,Brand,#808080
 Marmaluzi,Brand,#808080
 Organic Star,Brand,#808080
@@ -152,6 +167,7 @@ Base Gum,IMFSegment,#a4c2f4
 Base GUM,IMFSegment,#a4c2f4
 Base IF,IMFSegment,#ff9999
 Plus,IMFSegment,#8adb66
+Base Plus,IMFSegment,#8adb66
 Specials,IMFSegment,#f1c232
 IMC,ICSegment,#507ed8
 IPC,ICSegment,#cfe2f3
