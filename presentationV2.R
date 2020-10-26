@@ -12,11 +12,11 @@ library(forcats)
 library(gridExtra)
 
 # setwd("d:/Temp/3/Presentation-V2-master")
-setwd("/home/sergiy/Documents/Work/Nutricia/Scripts/Presentation-V2")
+setwd("/home/serhii/Documents/Work/Nutricia/Scripts/Presentation-V2")
 
-YTD.No = 6
+YTD.No = 8
 
-CP = "JUN 20"
+CP = "AUG 20"
 vsPP = "vs. PP"
 YTD = "YTD 20"
 difYTD = "vs YTD19"
@@ -28,20 +28,20 @@ difMAT = "vs MAT19"
 #                    "AUG 18", "SEP 18", "OCT 18", "NOV 18", "DEC 18", "JAN 19")
 
 tableColnames3 = c("MAT 19", "MAT 20", " .", "YTD 19", "YTD 20", " ..",
-                   "JUN 19", "JUL 19",
                    "AUG 19", "SEP 19", "OCT 19", "NOV 19", "DEC 19", "JAN 20",
-                   "FEB 20", "MAR 20", "APR 20", "MAY 20", "JUN 20")
+                   "FEB 20", "MAR 20", "APR 20", "MAY 20", "JUN 20", "JUL 20",
+                   "AUG 20")
 
 
 # Read all necessary files
 
-df = fread("/home/sergiy/Documents/Work/Nutricia/Data/202006/df.csv", 
+df = fread("/home/serhii/Documents/Work/Nutricia/Data/202008/df.csv", 
            header = TRUE, stringsAsFactors = FALSE, data.table = TRUE)
 ppt = read_pptx("sample5.pptx")
 dictColors = fread("dictColor.csv")
 dictColors = dictColors[Color != ""]
 # dictContent = fread("dictContent.csv")
-dictContent = read.csv("dictContent.csv")
+dictContent = read.csv("dictContent.csv", stringsAsFactors = FALSE)
 
 df = df[, c("SubBrand", "Size", "Age", "Scent", "Value", "Volume", 
             "Channel", "EC", "AC", "Acidified",
@@ -619,10 +619,10 @@ text_prop <- fp_text(color = "white", font.size = 18)
 # until regions are added
 # dictContent = dictContent[dictContent$Region == "Ukraine",]
 
-# ppt = read_pptx("sample5.pptx")
+ppt = read_pptx("sample5.pptx")
 
 for (i in dictContent$No) {
-  # for (i in 1:10) {
+  # for (i in 1:2) {
   
   print(i)
   
@@ -633,18 +633,38 @@ for (i in dictContent$No) {
     
     ppt = ppt %>%
       add_slide(layout = "1_Two Content", master = "Office Theme") %>%
-      ph_with_text(type = "title", str = dictContent$Name[i]) %>%
-      ph_with_ul(style = text_prop, 
-                 type = "body", 
-                 index = 3, 
-                 str_list = c(str_pad(dictContent$Region[i], 16)), 
-                 level_list = c(1)) %>% 
-      ph_with_flextable(type = "body",
-                        value = makeTable(getTable(dfName, fopt2)),
-                        index = 2) %>%
-      ph_with_flextable(type = "body",
-                        value = makeTable(getTable(dfName, fopt1)),
-                        index = 1)
+      
+      # Title
+      ph_with(value = dictContent$Name[i], location = ph_location_type(type = "title")) %>%
+      
+      # Region
+      ph_with(fpar(
+        ftext(
+          dictContent$Region[i],
+          prop = fp_text(
+            color = "white",
+            font.size = 18,
+            font.family = "Calibri"
+          )
+        ),
+        fp_p = fp_par(text.align = "center",
+                      padding.bottom =  5)
+      ),
+      location = ph_location_label(ph_label = "Rectangle 7")) %>%
+      
+      # Table 1
+      ph_with(value = makeTable(getTable(dfName, fopt2)),
+              location = ph_location_type("body", id = 2)) %>% 
+      # ph_with_flextable(type = "body",
+      #                   value = makeTable(getTable(dfName, fopt2)),
+      #                   index = 2) %>%
+      
+      # Table 2
+      # ph_with_flextable(type = "body",
+      #                   value = makeTable(getTable(dfName, fopt1)),
+      #                   index = 1)
+    ph_with(value = makeTable(getTable(dfName, fopt1)),
+            location = ph_location_type("body", id = 1))
     
   }
   
@@ -653,16 +673,38 @@ for (i in dictContent$No) {
     
     ppt = ppt %>%
       add_slide(layout = "Two Content", master = "Office Theme") %>%
-      ph_with_text(type = "title", str = dictContent$Name[i]) %>%
-      ph_with_ul(style = text_prop, 
-                 type = "body", 
-                 index = 3, 
-                 str_list = c(str_pad(dictContent$Region[i], 16)), 
-                 level_list = c(1)) %>% 
-      ph_with_gg(value = makeChart(getChart(dfName, fopt2)), index = 2) %>%
-      ph_with_flextable(type = "body",
-                        value = makeTable(getTable(dfName, fopt1)),
-                        index = 1)
+      
+      # Title
+      ph_with(value = dictContent$Name[i], location = ph_location_type(type = "title")) %>%
+      
+      # Region
+      ph_with(fpar(
+        ftext(
+          dictContent$Region[i],
+          prop = fp_text(
+            color = "white",
+            font.size = 18,
+            font.family = "Calibri"
+          )
+        ),
+        fp_p = fp_par(text.align = "center",
+                      padding.bottom =  5)
+      ),
+      location = ph_location_label(ph_label = "Rectangle 7")) %>%
+      
+      # Chart
+      # ph_with_gg(value = makeChart(getChart(dfName, fopt2)), index = 2) %>%
+      
+      ph_with(value = makeChart(getChart(dfName, fopt2)),
+              location = ph_location_type("body", id = 2)) %>% 
+      
+      # Table
+      # ph_with_flextable(type = "body",
+      #                   value = makeTable(getTable(dfName, fopt1)),
+      #                   index = 1)
+      
+      ph_with(value = makeTable(getTable(dfName, fopt1)),
+              location = ph_location_type("body", id = 1))
   }
     
     if (fopt1 != "" & i > 1 & 
@@ -671,30 +713,70 @@ for (i in dictContent$No) {
          dictContent$Level[i] == "IMFSegment")) {
       ppt = ppt %>%
         add_slide(layout = "1_Two Content", master = "Office Theme") %>%
-        ph_with_text(type = "title", str = dictContent$Name[i]) %>%
-        ph_with_ul(style = text_prop, 
-                   type = "body", 
-                   index = 3, 
-                   str_list = c(str_pad(dictContent$Region[i], 16)), 
-                   level_list = c(1)) %>%
-        ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt2), fopt2), index = 2) %>%
-        ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt1), fopt1), index = 1)
         
+        # Title
+        ph_with(value = dictContent$Name[i], location = ph_location_type(type = "title")) %>%
+        
+        # Region
+        ph_with(fpar(
+          ftext(
+            dictContent$Region[i],
+            prop = fp_text(
+              color = "white",
+              font.size = 18,
+              font.family = "Calibri"
+            )
+          ),
+          fp_p = fp_par(text.align = "center",
+                        padding.bottom =  5)
+        ),
+        location = ph_location_label(ph_label = "Rectangle 7")) %>%
+        
+        # Chart
+        # ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt2), fopt2), index = 2) %>%
+        ph_with(value = buildBarChart(getBarChart(dfName, fopt2), fopt2),
+                location = ph_location_type("body", id = 2)) %>% 
+        
+        
+        # Table
+        # ph_with_gg(value = buildBarChart(getBarChart(dfName, fopt1), fopt1), index = 1)
+      ph_with(value = buildBarChart(getBarChart(dfName, fopt1), fopt1),
+              location = ph_location_type("body", id = 1))
     }
   
   if (fopt1 != "" & i > 1 & 
       dictContent$Level[i] == "PriceSegmentAbs") {
     ppt = ppt %>%
       add_slide(layout = "2_Two Content", master = "Office Theme") %>%
-      ph_with_text(type = "title", str = dictContent$Name[i]) %>%
-      ph_with_ul(style = text_prop, 
-                 type = "body", 
-                 index = 3, 
-                 str_list = c(str_pad(dictContent$Region[i], 16)), 
-                 level_list = c(1)) %>%
-      ph_with_gg(value = buildPriceSegmentAbsChart(getBarChart(dfName, fopt2)), index = 2) %>%
-      ph_with_flextable(value = ftPriceSegmentAbs(getPriceSegmentTable(dfName, fopt1)), index = 1)
-    
+      
+      # Title
+      ph_with(value = dictContent$Name[i], location = ph_location_type(type = "title")) %>%
+      
+      # Region
+      ph_with(fpar(
+        ftext(
+          dictContent$Region[i],
+          prop = fp_text(
+            color = "white",
+            font.size = 18,
+            font.family = "Calibri"
+          )
+        ),
+        fp_p = fp_par(text.align = "center",
+                      padding.bottom =  5)
+      ),
+      location = ph_location_label(ph_label = "Rectangle 7")) %>%
+      
+      # Chart
+      # ph_with_gg(value = buildPriceSegmentAbsChart(getBarChart(dfName, fopt2)), index = 2) %>%
+      ph_with(value = buildPriceSegmentAbsChart(getBarChart(dfName, fopt2)),
+              location = ph_location_type("body", id = 2)) %>% 
+      
+      
+      # Table
+      # ph_with_flextable(value = ftPriceSegmentAbs(getPriceSegmentTable(dfName, fopt1)), index = 1)
+    ph_with(value = ftPriceSegmentAbs(getPriceSegmentTable(dfName, fopt1)),
+            location = ph_location_type("body", id = 1))
   }  
   
   print(i)
@@ -706,7 +788,46 @@ for (i in dictContent$No) {
 #   remove_slide(index = 1) %>% 
 #   remove_slide(index = 1) 
 
-print(ppt, target="sample3_6.pptx")
+# print(ppt, target="sample3_6.pptx")
+print(ppt, target="test.pptx")
+
+# ppt = read_pptx("sample5.pptx")
+# 
+# ppt = add_slide(ppt, layout = "1_Two Content", master = "Office Theme")
+# 
+# ppt = ph_with(ppt,
+#               block_list(fpar(ftext(
+#                 "", prop = fp_text(font.size = 3)
+#               )),
+#               fpar(
+#                 ftext(
+#                   "Ukraine",
+#                   prop = fp_text(
+#                     color = "white",
+#                     font.size = 18,
+#                     font.family = "Calibri"
+#                   )
+#                 ),
+#                 fp_p = fp_par(text.align = "center")
+#               )),
+#               location = ph_location_label(ph_label = "Rectangle 7"))
+# 
+# ppt = ph_with(ppt,
+#               fpar(
+#                 ftext(
+#                   "Ukraine",
+#                   prop = fp_text(
+#                     color = "white",
+#                     font.size = 18,
+#                     font.family = "Calibri"
+#                   )
+#                 ),
+#                 fp_p = fp_par(text.align = "center",
+#                               padding.bottom =  5)
+#               ),
+#               location = ph_location_label(ph_label = "Rectangle 7"))
+# 
+# print(ppt, target="test.pptx")
 
 # ppt = ppt %>%
 #   add_slide(layout = "Two Content", master = "Office Theme") %>%
